@@ -1,0 +1,104 @@
+name: Craft.io Plans and Pricing
+description: Pricing plans for Craft.io product management platform. API access is
+  restricted to Enterprise plan customers only. Contact Customer Success to request
+  an API key.
+url: https://craft.io/pricing/
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.1'
+plans:
+  - name: Starter
+    description: Start building great products with confidence. Single workspace with
+      basic roadmapping and backlog management capabilities.
+    url: https://craft.io/pricing/
+    price: 24.00
+    priceCurrency: USD
+    billingCycle: monthly
+    pricingModel: per-seat
+    enterprise: false
+    trial: true
+    trialDays: 14
+    features:
+      - Single workspace
+      - Up to 3 workspace views
+      - Up to 3 personal views
+      - Up to 5 custom fields
+      - Roadmap creation
+      - Backlog management
+      - Prioritization
+      - Up to 3 Guru AI views
+      - Development tool integration (2-way sync)
+      - Workflow management
+      - Unlimited free contributors and viewers
+    additionalPrices:
+      - billingCycle: annual
+        price: 19.00
+        priceCurrency: USD
+        description: Per user per month billed annually
+  - name: Pro
+    description: Give your product team limitless flexibility. Unlimited workspaces
+      and custom fields for growing product teams.
+    url: https://craft.io/pricing/
+    price: 99.00
+    priceCurrency: USD
+    billingCycle: monthly
+    pricingModel: per-seat
+    enterprise: false
+    trial: true
+    trialDays: 14
+    features:
+      - Unlimited workspaces
+      - Unlimited custom fields
+      - Unlimited workspace and personal views
+      - Unlimited Guru AI views
+      - Dependency management
+      - Design tool integrations (Figma, Adobe XD, Axure, InVision, Miro)
+      - LiveShare functionality
+      - Development tool integration (2-way sync)
+      - All Starter features
+    addons:
+      - name: OKRs and Product Strategy
+        price: 20.00
+        priceCurrency: USD
+        billingCycle: monthly
+        annualPrice: 15.00
+      - name: Feedback Portal
+        price: 20.00
+        priceCurrency: USD
+        billingCycle: monthly
+        annualPrice: 15.00
+      - name: Capacity Planning
+        price: 20.00
+        priceCurrency: USD
+        billingCycle: monthly
+        annualPrice: 15.00
+    additionalPrices:
+      - billingCycle: annual
+        price: 79.00
+        priceCurrency: USD
+        description: Per user per month billed annually
+  - name: Enterprise
+    description: Enterprise-grade features, security, onboarding, and support. Includes
+      public API access, advanced security, portfolio management, and a dedicated
+      customer success manager.
+    url: https://craft.io/pricing/
+    price: 0.00
+    priceCurrency: USD
+    billingCycle: annual
+    pricingModel: custom
+    enterprise: true
+    trial: false
+    contact: support@craft.io
+    features:
+      - Everything in Pro
+      - Product portfolio management
+      - Multi-level OKRs and portfolio roadmaps
+      - Enterprise security (SSO, SAML, IP whitelisting, audit logs)
+      - Public API access
+      - Slack, Teams, Salesforce integrations
+      - Dedicated customer success manager
+      - Advanced onboarding and support
+      - All add-ons included at no extra cost
+      - OKRs and Product Strategy included
+      - Feedback Portal included
+      - Capacity Planning included

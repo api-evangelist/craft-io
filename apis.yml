@@ -1,0 +1,111 @@
+name: Craft.io
+description: Craft.io is a product management platform with a REST API for managing
+  product backlog, specifications, OKRs, roadmaps, and customer feedback across product
+  teams. The public API provides enterprise customers programmatic access to workspace,
+  portfolio, and feedback portal data, enabling integration with BI tools and organizational
+  communication channels.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/craft-io/refs/heads/main/apis.yml
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.19'
+aid: craft-io
+tags:
+  - Product Management
+  - Roadmaps
+  - OKRs
+  - Backlog
+  - Feedback
+  - Portfolio
+  - Specifications
+apis:
+  - name: Craft.io Workspace API
+    description: REST API providing access to workspace data including work items,
+      custom fields, terminology, initiatives, products, epics, features, and stories
+      within Craft.io product workspaces.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+    baseURL: https://api.craft.io
+    tags:
+      - Workspace
+      - Work Items
+      - Product Management
+    properties:
+      - type: Documentation
+        url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+      - type: Swagger
+        url: https://api.craft.io/docs
+      - type: SwaggerEU
+        url: https://api-eu.craft.io/docs
+    contact:
+      - FN: Craft.io Support
+        url: https://help.craft.io/
+        email: support@craft.io
+  - name: Craft.io Portfolio API
+    description: REST API providing access to portfolio data including portfolio items,
+      portfolio custom fields, and terminology for enterprise product portfolio management.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+    baseURL: https://api.craft.io
+    tags:
+      - Portfolio
+      - Product Portfolio Management
+    properties:
+      - type: Documentation
+        url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+      - type: Swagger
+        url: https://api.craft.io/docs
+      - type: SwaggerEU
+        url: https://api-eu.craft.io/docs
+    contact:
+      - FN: Craft.io Support
+        url: https://help.craft.io/
+        email: support@craft.io
+  - name: Craft.io Feedback Portal API
+    description: REST API for managing customer feedback portals, including listing
+      portals and categories, retrieving feedback items, and submitting new feedback
+      via POST requests.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+    baseURL: https://api.craft.io
+    tags:
+      - Feedback
+      - Customer Feedback
+      - Feedback Portal
+    properties:
+      - type: Documentation
+        url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+      - type: Swagger
+        url: https://api.craft.io/docs
+      - type: SwaggerEU
+        url: https://api-eu.craft.io/docs
+    contact:
+      - FN: Craft.io Support
+        url: https://help.craft.io/
+        email: support@craft.io
+common:
+  - type: Website
+    url: https://craft.io/
+  - type: Documentation
+    url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  - type: GitHubOrg
+    url: https://github.com/io-craft-org
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/craft.io
+  - type: Blog
+    url: https://craft.io/blog/
+  - type: Pricing
+    url: https://craft.io/pricing/
+  - type: StatusPage
+    url: https://craftio.statuspage.io/
+  - type: X
+    url: https://x.com/createwithcraft
+  - type: Plans
+    url: plans/craft-io-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/craft-io-rate-limits.yml
+  - type: FinOps
+    url: finops/craft-io-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,109 @@
+name: Craft.io FinOps Framework
+description: FinOps Framework FOCUS-aligned cost and usage information for Craft.io
+  product management platform API consumption. API access is exclusively available
+  on the Enterprise plan which is custom-priced annually. Per-seat pricing applies
+  to editor roles.
+url: https://craft.io/pricing/
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '1.0'
+provider: Craft.io
+providerURL: https://craft.io/
+billingModel:
+  type: per-seat
+  description: Pricing is per Workspace Editor with full editing rights. A user with
+    a paid license is only charged once regardless of the number of workspaces they
+    are invited to. Unlimited viewers and contributors are included at no extra cost.
+  currency: USD
+  billingCycles:
+    - monthly
+    - annual
+  annualDiscount: true
+costAllocation:
+  dimensions:
+    - name: Plan Tier
+      description: Cost varies by plan tier (Starter, Pro, Enterprise)
+      values:
+        - Starter
+        - Pro
+        - Enterprise
+    - name: Editor Seats
+      description: Number of workspace editors determines base cost
+    - name: Add-ons
+      description: Optional OKRs, Feedback Portal, and Capacity Planning add-ons
+        for Pro tier
+    - name: Billing Cycle
+      description: Monthly vs annual billing affects per-seat price
+services:
+  - name: Starter Plan
+    description: Single workspace product management for small teams
+    monthlyPricePerSeat: 24.00
+    annualPricePerSeat: 19.00
+    currency: USD
+    apiAccess: false
+    notes: No API access included
+  - name: Pro Plan
+    description: Unlimited workspaces and integrations for growing product teams
+    monthlyPricePerSeat: 99.00
+    annualPricePerSeat: 79.00
+    currency: USD
+    apiAccess: false
+    notes: No API access; add-ons available at $20/month or $15/year per user
+  - name: Enterprise Plan
+    description: Enterprise-grade product management with public API access, advanced
+      security, and dedicated support
+    monthlyPricePerSeat: 0.00
+    annualPricePerSeat: 0.00
+    currency: USD
+    pricingModel: custom
+    apiAccess: true
+    notes: Custom annual pricing; contact sales for quote. Includes all add-ons,
+      public API access, SSO, SAML, portfolio management, and dedicated CSM.
+  - name: Pro Add-on OKRs and Product Strategy
+    description: Add OKRs and strategy management to Pro plan
+    monthlyPricePerSeat: 20.00
+    annualPricePerSeat: 15.00
+    currency: USD
+    apiAccess: false
+    includedInEnterprise: true
+  - name: Pro Add-on Feedback Portal
+    description: Add customer feedback portal capabilities to Pro plan
+    monthlyPricePerSeat: 20.00
+    annualPricePerSeat: 15.00
+    currency: USD
+    apiAccess: true
+    apiNotes: Feedback Portal API available via Enterprise plan only, not via this
+      add-on
+    includedInEnterprise: true
+  - name: Pro Add-on Capacity Planning
+    description: Add capacity planning features to Pro plan
+    monthlyPricePerSeat: 20.00
+    annualPricePerSeat: 15.00
+    currency: USD
+    apiAccess: false
+    includedInEnterprise: true
+optimization:
+  recommendations:
+    - name: Annual Billing
+      description: Choose annual billing over monthly to reduce per-seat costs. Starter
+        saves $5/user/month ($60/year), Pro saves $20/user/month ($240/year).
+    - name: Viewer Seats
+      description: Add stakeholders as viewers or contributors (free) rather than
+        editors to avoid incremental seat costs.
+    - name: Multi-workspace Efficiency
+      description: Users invited to multiple workspaces are only billed once, enabling
+        cost-efficient scaling across workspaces without seat multiplication.
+    - name: API Access Planning
+      description: API access requires Enterprise plan. Evaluate total Enterprise
+        plan cost against integration value before upgrading from Pro.
+  apiCostConsiderations:
+    - description: No API call-level pricing is documented. Enterprise plan cost is
+        the primary expense for API usage.
+    - description: US and EU data center endpoints are both available to Enterprise
+        customers at no additional regional cost.
+    - description: Contact Customer Success (support@craft.io) for volume discounts
+        or custom Enterprise pricing specific to your organization's scale.
+contact:
+  sales: https://craft.io/pricing/
+  support: support@craft.io
+  helpCenter: https://help.craft.io/

@@ -1,0 +1,43 @@
+name: Craft.io API Rate Limits
+description: Rate limit information for the Craft.io public REST API. Craft.io does
+  not publicly document specific rate limit thresholds. The API documentation states
+  rate limits are not specified but API changes are diligently documented with backward
+  compatibility prioritized. Enterprise customers should contact Customer Success for
+  specific rate limit details applicable to their account tier.
+url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.1'
+rateLimits:
+  - name: Enterprise API Rate Limit
+    description: Rate limits for Enterprise plan customers accessing the Craft.io
+      public REST API. Specific thresholds are not publicly documented; contact Customer
+      Success for account-specific limits.
+    scope: account
+    limit: unspecified
+    period: unspecified
+    notes: No public rate limit thresholds are specified in Craft.io documentation.
+      The API is restricted to Enterprise customers only. Contact support@craft.io
+      or your Customer Success Manager for rate limit details specific to your account.
+    contact: support@craft.io
+authentication:
+  - type: API Key
+    description: Account API Key is required for all API requests. The key serves
+      as the authentication mechanism to verify access rights. Three credentials are
+      required: Account API Key, Craft.io Account ID, and Resource IDs (workspace,
+      portfolio, or feedback portal identifiers). Contact your Customer Success Manager
+      to obtain these credentials.
+    location: header
+    keyName: Authorization
+    obtaining: Contact Craft.io Customer Success team to request an API key
+regions:
+  - name: US Data Center
+    baseURL: https://api.craft.io
+    docsURL: https://api.craft.io/docs
+    status: operational
+    uptimePct: '100.0'
+  - name: EU Data Center
+    baseURL: https://api-eu.craft.io
+    docsURL: https://api-eu.craft.io/docs
+    status: operational
+    uptimePct: '100.0'
