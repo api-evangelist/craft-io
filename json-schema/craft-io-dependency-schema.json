@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-dependency-schema.json",
+  "title": "Dependency",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string",
+      "enum": [
+        "blocks",
+        "blocked by",
+        "related"
+      ]
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "portfolioId": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "value"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

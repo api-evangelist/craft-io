@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-itemcreate-schema.json",
+  "title": "ItemCreate",
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "parent": {
+      "$ref": "#/components/schemas/NullableType_EntityId_"
+    },
+    "description": {
+      "type": "string",
+      "nullable": true
+    },
+    "storyPoints": {
+      "type": "number",
+      "format": "double"
+    },
+    "initiativeId": {
+      "$ref": "#/components/schemas/NullableType_string_"
+    },
+    "value": {
+      "type": "number",
+      "format": "double"
+    },
+    "effort": {
+      "type": "number",
+      "format": "double"
+    },
+    "kano": {
+      "type": "string"
+    },
+    "estimatedHours": {
+      "type": "number",
+      "format": "double"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "actualStartDate": {
+      "$ref": "#/components/schemas/NullableType_Date_"
+    },
+    "actualEndDate": {
+      "$ref": "#/components/schemas/NullableType_Date_"
+    },
+    "status": {
+      "$ref": "#/components/schemas/NullableType_EntityId_"
+    },
+    "importance": {
+      "$ref": "#/components/schemas/NullableType_EntityId_"
+    },
+    "objectives": {
+      "$ref": "#/components/schemas/NullableType_EntityId-Array_"
+    },
+    "keyResults": {
+      "$ref": "#/components/schemas/NullableType_EntityId-Array_"
+    },
+    "persona": {
+      "$ref": "#/components/schemas/NullableType_EntityId_"
+    },
+    "personas": {
+      "$ref": "#/components/schemas/NullableType_EntityId-Array_"
+    },
+    "sprint": {
+      "$ref": "#/components/schemas/NullableType_EntityId_"
+    },
+    "quarter": {
+      "$ref": "#/components/schemas/NullableType_EntityId_"
+    },
+    "assignee": {
+      "$ref": "#/components/schemas/NullableType_Assignee_"
+    },
+    "customFields": {
+      "items": {
+        "$ref": "#/components/schemas/CustomFieldValue"
+      },
+      "type": "array"
+    },
+    "outIn": {
+      "$ref": "#/components/schemas/OutIn"
+    }
+  },
+  "required": [
+    "type",
+    "workspaceId",
+    "title",
+    "parent"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-itemspaginated-itemflat--schema.json",
+  "title": "ItemsPaginated_ItemFlat_",
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/components/schemas/ItemFlat"
+      },
+      "type": "array"
+    },
+    "metadata": {
+      "$ref": "#/components/schemas/PaginationMetadata"
+    }
+  },
+  "required": [
+    "items",
+    "metadata"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

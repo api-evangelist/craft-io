@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-devtoolkeylist-schema.json",
+  "title": "DevToolKeyList",
+  "properties": {
+    "jira": {
+      "type": "string"
+    },
+    "ado": {
+      "type": "string"
+    },
+    "github": {
+      "type": "string"
+    },
+    "gitlab": {
+      "type": "string"
+    },
+    "pivotaltracker": {
+      "type": "string"
+    },
+    "targetprocess": {
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false
+}

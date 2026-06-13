@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-optionshape-schema.json",
+  "title": "OptionShape",
+  "type": "string",
+  "enum": [
+    "select",
+    "date",
+    "date_range"
+  ]
+}

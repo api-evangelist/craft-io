@@ -1,0 +1,72 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "craft": "https://api.craft.io/vocab#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "Workspace": "craft:Workspace",
+    "Portfolio": "craft:Portfolio",
+    "WorkItem": "craft:WorkItem",
+    "Initiative": "craft:Initiative",
+    "FeedbackPortal": "craft:FeedbackPortal",
+    "FeedbackItem": "craft:FeedbackItem",
+    "Category": "craft:Category",
+    "CustomField": "craft:CustomField",
+    "Terminology": "craft:Terminology",
+
+    "id": "@id",
+    "name": "schema:name",
+    "description": "schema:description",
+    "webUrl": "schema:url",
+    "key": "craft:key",
+    "accountId": "craft:accountId",
+    "workspaceId": "craft:workspaceId",
+    "portfolioId": "craft:portfolioId",
+    "portalId": "craft:portalId",
+    "itemId": "craft:itemId",
+
+    "type": "schema:additionalType",
+    "label": "schema:name",
+    "startDate": {
+      "@id": "schema:startDate",
+      "@type": "xsd:date"
+    },
+    "endDate": {
+      "@id": "schema:endDate",
+      "@type": "xsd:date"
+    },
+    "createdAt": {
+      "@id": "schema:dateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "updatedAt": {
+      "@id": "schema:dateModified",
+      "@type": "xsd:dateTime"
+    },
+
+    "values": "craft:values",
+    "options": "craft:options",
+    "singular": "craft:singular",
+    "plural": "craft:plural",
+    "assignee": "craft:assignee",
+    "parent": "craft:parent",
+    "children": "craft:children",
+    "status": "schema:status",
+    "priority": "craft:priority",
+    "tags": "schema:keywords",
+    "importance": "craft:importance",
+    "categories": "craft:categories",
+
+    "SlackConnection": "craft:SlackConnection",
+    "SlackPortal": "craft:SlackPortal",
+    "Persona": "craft:Persona",
+
+    "ApiKeyIntrospection": "craft:ApiKeyIntrospection",
+    "apiKey": "craft:apiKey",
+    "userId": "craft:userId",
+    "email": "schema:email",
+
+    "message": "schema:description",
+    "GeneralErrorResponse": "craft:GeneralErrorResponse"
+  }
+}

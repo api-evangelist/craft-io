@@ -1,0 +1,13 @@
+[
+  {
+    "id": "string",
+    "name": "string",
+    "workspaces": [
+      {
+        "id": "string",
+        "name": "string",
+        "key": "string"
+      }
+    ]
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-apikeyintrospection-schema.json",
+  "title": "ApiKeyIntrospection",
+  "description": "Introspection endpoints for \"what is the current API key allowed to do\".\nUsed by clients (notably the MCP server) to self-filter the tools they expose.",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "The user this key authenticates as."
+    },
+    "accountId": {
+      "type": "string",
+      "description": "The account this key belongs to."
+    },
+    "scopes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "description": "Granted granular scope strings (already normalized)."
+    },
+    "resourceScope": {
+      "properties": {
+        "feedback_portals": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "nullable": true
+        },
+        "portfolios": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "nullable": true
+        },
+        "workspaces": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "nullable": true
+        }
+      },
+      "type": "object",
+      "description": "Optional resource-scope narrowing. When a dimension is null/missing the key\nhas access to every instance the bound user can see; when present it is the\nexclusive allowlist of ids on that dimension."
+    },
+    "mcpAccess": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "userId",
+    "accountId",
+    "scopes",
+    "resourceScope",
+    "mcpAccess"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

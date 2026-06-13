@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-customfield-schema.json",
+  "title": "CustomField",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "values": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "options": {
+      "items": {
+        "$ref": "#/components/schemas/CustomFieldOption"
+      },
+      "type": "array"
+    },
+    "optionShape": {
+      "$ref": "#/components/schemas/OptionShape"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "type"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-item-schema.json",
+  "title": "Item",
+  "properties": {
+    "id": {
+      "$ref": "#/components/schemas/NullableType_string_"
+    },
+    "type": {
+      "type": "string"
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "portfolioId": {
+      "type": "string"
+    },
+    "shortId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "nullable": true
+    },
+    "creationTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "storyPoints": {
+      "type": "number",
+      "format": "double"
+    },
+    "initiativeId": {
+      "$ref": "#/components/schemas/NullableType_string_"
+    },
+    "value": {
+      "type": "number",
+      "format": "double"
+    },
+    "effort": {
+      "type": "number",
+      "format": "double"
+    },
+    "kano": {
+      "type": "string"
+    },
+    "estimatedHours": {
+      "type": "number",
+      "format": "double"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "actualStartDate": {
+      "$ref": "#/components/schemas/NullableType_Date_"
+    },
+    "actualEndDate": {
+      "$ref": "#/components/schemas/NullableType_Date_"
+    },
+    "devToolKey": {
+      "$ref": "#/components/schemas/DevToolKeyList"
+    },
+    "webUrl": {
+      "type": "string",
+      "description": "Canonical Craft.io app URL for this item. Computed in PublishService."
+    },
+    "status": {
+      "$ref": "#/components/schemas/NullableType_Entity_"
+    },
+    "importance": {
+      "$ref": "#/components/schemas/NullableType_Entity_"
+    },
+    "objective": {
+      "$ref": "#/components/schemas/NullableType_Entity_"
+    },
+    "keyResult": {
+      "$ref": "#/components/schemas/NullableType_Entity_"
+    },
+    "objectives": {
+      "$ref": "#/components/schemas/NullableType_Entity-Array_"
+    },
+    "keyResults": {
+      "$ref": "#/components/schemas/NullableType_Entity-Array_"
+    },
+    "persona": {
+      "$ref": "#/components/schemas/NullableType_Persona_"
+    },
+    "personas": {
+      "$ref": "#/components/schemas/NullableType_Persona-Array_"
+    },
+    "sprint": {
+      "$ref": "#/components/schemas/NullableType_EntityWithDates_"
+    },
+    "quarter": {
+      "$ref": "#/components/schemas/NullableType_EntityWithTerminology-and-EntityWithDates_"
+    },
+    "assignee": {
+      "$ref": "#/components/schemas/NullableType_Assignee_"
+    },
+    "parent": {
+      "$ref": "#/components/schemas/NullableType_EntityParent_"
+    },
+    "createdBy": {
+      "$ref": "#/components/schemas/Entity"
+    },
+    "customFields": {
+      "items": {
+        "$ref": "#/components/schemas/CustomFieldValue"
+      },
+      "type": "array"
+    },
+    "outIn": {
+      "$ref": "#/components/schemas/OutIn"
+    },
+    "dependencies": {
+      "items": {
+        "$ref": "#/components/schemas/Dependency"
+      },
+      "type": "array"
+    },
+    "feedbackLinks": {
+      "$ref": "#/components/schemas/NullableType_FeedbackLink-Array_"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false
+}

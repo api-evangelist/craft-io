@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-workspace-schema.json",
+  "title": "Workspace",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "nullable": true
+    },
+    "key": {
+      "type": "string"
+    },
+    "webUrl": {
+      "type": "string",
+      "description": "Canonical Craft.io app URL for this workspace. Computed in PublishService."
+    }
+  },
+  "type": "object",
+  "additionalProperties": false
+}

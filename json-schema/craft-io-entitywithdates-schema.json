@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-entitywithdates-schema.json",
+  "title": "EntityWithDates",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "nullable": true
+    },
+    "startDate": {
+      "type": "string",
+      "nullable": true
+    },
+    "endDate": {
+      "type": "string",
+      "nullable": true
+    }
+  },
+  "type": "object",
+  "additionalProperties": false
+}

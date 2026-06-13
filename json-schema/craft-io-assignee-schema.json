@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-assignee-schema.json",
+  "title": "Assignee",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "team": {
+      "type": "string"
+    },
+    "user": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "team"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

@@ -1,0 +1,66 @@
+{
+  "items": [
+    {
+      "id": "string",
+      "type": "string",
+      "workspaceId": "string",
+      "title": "string",
+      "description": "string",
+      "creationTime": "2022-09-16T06:26:01.000Z",
+      "updateTime": "2023-06-14T13:54:34.792Z",
+      "status_id": "string",
+      "status_name": "string",
+      "importance_id": "string",
+      "importance_name": "string",
+      "objective_id": "string",
+      "objective_name": "string",
+      "keyResult_id": "string",
+      "keyResult_name": "string",
+      "persona_id": "string",
+      "persona_name": "string",
+      "sprint_id": "string",
+      "sprint_name": "string",
+      "quarter_id": "string",
+      "release_name": "string",
+      "assignee_id": "string",
+      "assignee_team": "string",
+      "assignee_user": "string",
+      "storyPoints": 0,
+      "estimatedHours": 0,
+      "actualStartDate": "2023-06-06T06:56:35.000Z",
+      "actualEndDate": "2023-06-20T06:56:35.000Z",
+      "devToolKey": {
+        "jira": "string",
+        "ado": "string",
+        "github": "string",
+        "gitlab": "string",
+        "pivotaltracker": "string",
+        "targetprocess": "string"
+      },
+      "parent_id": "string",
+      "parent_title": "string",
+      "parent_shortId": "string",
+      "custom_2305843010172190992": "string",
+      "custom_2305843010172191018": "string",
+      "custom_2305843010172191132": "string",
+      "custom_2305843010172191024": "string",
+      "custom_2305843010172191022": "string",
+      "custom_2305843010172191016": "2023-06-20T21:00:00.000Z",
+      "custom_2305843010172171351": "string",
+      "custom_2305843010172171349": "string",
+      "custom_2305843010172171347": "string",
+      "custom_2305843010172190959": [
+        "string"
+      ],
+      "labels": [
+        "string"
+      ]
+    }
+  ],
+  "metadata": {
+    "currentPage": 0,
+    "perPage": 0,
+    "totalPages": 0,
+    "totalRecords": 0
+  }
+}

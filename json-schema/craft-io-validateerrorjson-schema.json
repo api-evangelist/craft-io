@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-validateerrorjson-schema.json",
+  "title": "ValidateErrorJSON",
+  "properties": {
+    "message": {
+      "type": "string"
+    },
+    "details": {
+      "properties": {},
+      "additionalProperties": {},
+      "type": "object"
+    }
+  },
+  "required": [
+    "message",
+    "details"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

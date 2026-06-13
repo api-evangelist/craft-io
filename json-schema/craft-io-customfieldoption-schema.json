@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-customfieldoption-schema.json",
+  "title": "CustomFieldOption",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "startDate": {
+      "type": "string",
+      "nullable": true
+    },
+    "endDate": {
+      "type": "string",
+      "nullable": true
+    }
+  },
+  "required": [
+    "id",
+    "label"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

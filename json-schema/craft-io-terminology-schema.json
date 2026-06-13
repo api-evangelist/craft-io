@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-terminology-schema.json",
+  "title": "Terminology",
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "default": {
+      "type": "string"
+    },
+    "customSingle": {
+      "type": "string"
+    },
+    "customPlural": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "category",
+    "default",
+    "customSingle"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

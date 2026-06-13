@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-outin-schema.json",
+  "title": "OutIn",
+  "properties": {
+    "quarter": {
+      "type": "boolean"
+    },
+    "sprint": {
+      "type": "boolean"
+    }
+  },
+  "type": "object",
+  "additionalProperties": false
+}

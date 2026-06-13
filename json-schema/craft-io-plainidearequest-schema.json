@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-plainidearequest-schema.json",
+  "title": "PlainIdeaRequest",
+  "properties": {
+    "workspaceId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string",
+      "description": "Email address of the idea author. The backend looks up (or creates) the\r\nperson record from this email and attributes the feedback to them. This\r\nis NOT a user ID \u2014 sending a numeric ID will return 400.",
+      "example": "user@example.com"
+    },
+    "categoryId": {
+      "type": "string"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "importanceId": {
+      "type": "string",
+      "description": "Portal importance \u2014 numeric ID OR exact name (case-insensitive). When\r\nomitted, the portal's `isDefault: true` importance is used (see\r\n`GET /feedback_portal/{portalId}/importances`).",
+      "example": "Critical"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

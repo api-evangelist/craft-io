@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-itemflat-schema.json",
+  "title": "ItemFlat",
+  "properties": {
+    "id": {
+      "$ref": "#/components/schemas/NullableType_string_"
+    },
+    "type": {
+      "type": "string"
+    },
+    "workspaceId": {
+      "type": "string"
+    },
+    "portfolioId": {
+      "type": "string"
+    },
+    "shortId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "nullable": true
+    },
+    "creationTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "storyPoints": {
+      "type": "number",
+      "format": "double"
+    },
+    "initiativeId": {
+      "$ref": "#/components/schemas/NullableType_string_"
+    },
+    "value": {
+      "type": "number",
+      "format": "double"
+    },
+    "effort": {
+      "type": "number",
+      "format": "double"
+    },
+    "kano": {
+      "type": "string"
+    },
+    "estimatedHours": {
+      "type": "number",
+      "format": "double"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "actualStartDate": {
+      "$ref": "#/components/schemas/NullableType_Date_"
+    },
+    "actualEndDate": {
+      "$ref": "#/components/schemas/NullableType_Date_"
+    },
+    "devToolKey": {
+      "$ref": "#/components/schemas/DevToolKeyList"
+    },
+    "webUrl": {
+      "type": "string",
+      "description": "Canonical Craft.io app URL for this item. Computed in PublishService."
+    },
+    "status_id": {
+      "type": "string"
+    },
+    "status_name": {
+      "type": "string"
+    },
+    "importance_id": {
+      "type": "string"
+    },
+    "importance_name": {
+      "type": "string"
+    },
+    "objective_id": {
+      "type": "string"
+    },
+    "objective_name": {
+      "type": "string"
+    },
+    "keyResult_id": {
+      "type": "string"
+    },
+    "keyResult_name": {
+      "type": "string"
+    },
+    "persona_id": {
+      "type": "string"
+    },
+    "persona_name": {
+      "type": "string"
+    },
+    "sprint_id": {
+      "type": "string"
+    },
+    "sprint_name": {
+      "type": "string"
+    },
+    "quarter_id": {
+      "type": "string"
+    },
+    "quarter_name": {
+      "type": "string"
+    },
+    "assignee_id": {
+      "type": "string"
+    },
+    "assignee_team": {
+      "type": "string"
+    },
+    "assignee_user": {
+      "type": "string"
+    },
+    "parent_id": {
+      "type": "string",
+      "nullable": true
+    },
+    "parent_name": {
+      "type": "string",
+      "nullable": true
+    },
+    "parent_shortId": {
+      "type": "string",
+      "nullable": true
+    },
+    "devToolKey_jira": {
+      "type": "string"
+    },
+    "devToolKey_ado": {
+      "type": "string"
+    },
+    "devToolKey_github": {
+      "type": "string"
+    },
+    "devToolKey_gitlab": {
+      "type": "string"
+    },
+    "devToolKey_pivotaltracker": {
+      "type": "string"
+    },
+    "devToolKey_targetprocess": {
+      "type": "string"
+    },
+    "sprint_startDate": {
+      "type": "string",
+      "nullable": true
+    },
+    "sprint_endDate": {
+      "type": "string",
+      "nullable": true
+    },
+    "quarter_startDate": {
+      "type": "string",
+      "nullable": true
+    },
+    "quarter_endDate": {
+      "type": "string",
+      "nullable": true
+    }
+  },
+  "type": "object",
+  "additionalProperties": {
+    "anyOf": [
+      {
+        "type": "string"
+      },
+      {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      {
+        "type": "boolean"
+      },
+      {
+        "type": "string",
+        "format": "date-time"
+      },
+      {
+        "type": "number",
+        "format": "double"
+      },
+      {
+        "$ref": "#/components/schemas/DevToolKeyList"
+      }
+    ],
+    "nullable": true
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-basefeedbackitem-schema.json",
+  "title": "BaseFeedbackItem",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "portalId": {
+      "type": "string"
+    },
+    "shortId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "creationTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "category": {
+      "$ref": "#/components/schemas/Category"
+    },
+    "owner": {
+      "$ref": "#/components/schemas/Person"
+    },
+    "createdBy": {
+      "$ref": "#/components/schemas/Person"
+    },
+    "status": {
+      "$ref": "#/components/schemas/Entity"
+    },
+    "internalStatus": {
+      "$ref": "#/components/schemas/Entity"
+    },
+    "importance": {
+      "$ref": "#/components/schemas/Entity"
+    },
+    "labels": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "customFields": {
+      "items": {
+        "$ref": "#/components/schemas/CustomFieldValue"
+      },
+      "type": "array"
+    },
+    "linkedItems": {
+      "$ref": "#/components/schemas/NullableType_LinkedItem-Array_"
+    },
+    "webUrl": {
+      "type": "string",
+      "description": "Direct link into the feedback portal for this feedback item."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

@@ -1,0 +1,80 @@
+vocabulary:
+  - term: Workspace
+    definition: A product workspace in Craft.io containing work items, custom fields, and terminology for a product team.
+    tags:
+      - Workspace
+
+  - term: Portfolio
+    definition: A product portfolio in Craft.io aggregating multiple workspaces and portfolio items for enterprise portfolio management.
+    tags:
+      - Portfolio
+
+  - term: Work Item
+    definition: A unit of work in a Craft.io workspace, which may be an initiative, product, epic, feature, or story.
+    tags:
+      - Work Items
+      - OKRs
+
+  - term: Initiative
+    definition: A high-level portfolio work item in Craft.io representing a strategic objective spanning multiple products or workspaces.
+    tags:
+      - Portfolio
+      - Work Items
+
+  - term: OKR
+    definition: Objectives and Key Results — a goal-setting framework supported in Craft.io to track product strategy and outcomes.
+    tags:
+      - OKRs
+
+  - term: Custom Field
+    definition: A user-defined metadata field attached to work items or portfolio items in Craft.io, supporting types such as select, date, and date range.
+    tags:
+      - Workspace
+      - Portfolio
+
+  - term: Terminology
+    definition: Workspace- or portfolio-level labels that rename standard Craft.io concepts (e.g., renaming "epic" to "theme") to match a team's language.
+    tags:
+      - Workspace
+      - Portfolio
+
+  - term: Feedback Portal
+    definition: A customer-facing portal in Craft.io for collecting product feedback, ideas, and feature requests from end users.
+    tags:
+      - Feedback
+
+  - term: Feedback Item
+    definition: A single piece of customer feedback or idea submitted to a Craft.io feedback portal.
+    tags:
+      - Feedback
+
+  - term: Category
+    definition: A grouping label within a Craft.io feedback portal used to organize feedback items by topic or product area.
+    tags:
+      - Feedback
+
+  - term: Importance
+    definition: A ranking option within a Craft.io feedback portal that indicates the priority or urgency of a feedback item.
+    tags:
+      - Feedback
+
+  - term: Portfolio Field
+    definition: A custom field specific to Craft.io portfolio items, used for portfolio-level metadata and reporting.
+    tags:
+      - Portfolio
+
+  - term: API Key
+    definition: A token used to authenticate requests to the Craft.io Public API, scoped to a user account.
+    tags:
+      - Authentication
+
+  - term: Account ID
+    definition: The unique identifier for a Craft.io account, used to scope workspace and portfolio queries.
+    tags:
+      - Workspace
+      - Portfolio
+
+  - term: Flat View
+    definition: An alternate representation of work items returned as a flat list rather than a nested hierarchy, enabling simpler pagination and processing.
+    tags:
+      - Work Items

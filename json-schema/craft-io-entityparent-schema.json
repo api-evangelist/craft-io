@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-entityparent-schema.json",
+  "title": "EntityParent",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "shortId": {
+      "type": "string"
+    },
+    "webUrl": {
+      "type": "string",
+      "description": "Direct link to the parent item in the Craft.io app."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

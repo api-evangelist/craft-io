@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-teaminfo-schema.json",
+  "title": "TeamInfo",
+  "properties": {
+    "installation": {
+      "$ref": "#/components/schemas/SlackConnection"
+    },
+    "portalList": {
+      "items": {
+        "$ref": "#/components/schemas/SlackPortal"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "installation",
+    "portalList"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

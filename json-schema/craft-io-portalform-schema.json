@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-portalform-schema.json",
+  "title": "PortalForm",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "categories": {
+      "items": {
+        "$ref": "#/components/schemas/Entity"
+      },
+      "type": "array"
+    },
+    "fields": {
+      "items": {
+        "$ref": "#/components/schemas/FormCustomField"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "categories",
+    "fields"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-paginationmetadata-schema.json",
+  "title": "PaginationMetadata",
+  "properties": {
+    "currentPage": {
+      "type": "number",
+      "format": "double"
+    },
+    "perPage": {
+      "type": "number",
+      "format": "double"
+    },
+    "totalPages": {
+      "type": "number",
+      "format": "double"
+    },
+    "totalRecords": {
+      "type": "number",
+      "format": "double"
+    }
+  },
+  "required": [
+    "currentPage",
+    "perPage",
+    "totalPages",
+    "totalRecords"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}

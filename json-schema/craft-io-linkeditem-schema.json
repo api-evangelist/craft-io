@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/craft-io/main/json-schema/craft-io-linkeditem-schema.json",
+  "title": "LinkedItem",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "shortId": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "webUrl": {
+      "type": "string",
+      "description": "Direct link to the linked work item in the Craft.io app."
+    }
+  },
+  "type": "object",
+  "additionalProperties": false
+}
