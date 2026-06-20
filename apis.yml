@@ -4,7 +4,7 @@ description: Craft.io is a product management platform with a REST API for manag
   teams. The public API provides enterprise customers programmatic access to workspace,
   portfolio, and feedback portal data, enabling integration with BI tools and organizational
   communication channels.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/craft-io/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
@@ -23,7 +23,7 @@ apis:
     description: REST API providing access to workspace data including work items,
       custom fields, terminology, initiatives, products, epics, features, and stories
       within Craft.io product workspaces.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
     baseURL: https://api.craft.io
     tags:
@@ -44,7 +44,7 @@ apis:
   - name: Craft.io Portfolio API
     description: REST API providing access to portfolio data including portfolio items,
       portfolio custom fields, and terminology for enterprise product portfolio management.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
     baseURL: https://api.craft.io
     tags:
@@ -65,7 +65,7 @@ apis:
     description: REST API for managing customer feedback portals, including listing
       portals and categories, retrieving feedback items, and submitting new feedback
       via POST requests.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
     baseURL: https://api.craft.io
     tags:
