@@ -84,6 +84,10 @@ apis:
         url: https://help.craft.io/
         email: support@craft.io
 common:
+  - type: DomainSecurity
+    url: security/craft-io-domain-security.yml
+  - type: Authentication
+    url: authentication/craft-io-authentication.yml
   - type: Website
     url: https://craft.io/
   - type: Documentation

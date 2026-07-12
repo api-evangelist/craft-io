@@ -1,0 +1,17 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/craft-io-feedback-openapi.yml, openapi/craft-io-portfolio-openapi.yml, openapi/craft-io-workspace-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: api_key
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  sources:
+  - openapi/craft-io-feedback-openapi.yml
+  - openapi/craft-io-portfolio-openapi.yml
+  - openapi/craft-io-workspace-openapi.yml
