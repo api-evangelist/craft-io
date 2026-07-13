@@ -2,19 +2,11 @@
   "repo": "craft-io",
   "feeds": [
     {
-      "source": "https://craft.io/blog/",
-      "feed_url": "",
-      "saved": 0,
-      "method": "agent-scrape",
-      "note": "no posts dated 2026-06-20..27 (latest visible 2026-04-19)"
-    },
-    {
       "source": "https://www.linkedin.com/company/craft.io",
-      "saved": 0,
       "error": "HTTPError"
     }
   ],
-  "fetched": "2026-06-27T12:34:29Z",
+  "fetched": "2026-07-11T11:50:51Z",
   "post_count": 0,
-  "agent_pulled": "2026-06-27"
+  "agent_pulled": "2026-07-04"
 }
