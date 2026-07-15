@@ -1,0 +1,368 @@
+generated: '2026-07-15'
+method: generated
+source: openapi/craft-io-feedback-openapi.yml, openapi/craft-io-portfolio-openapi.yml, openapi/craft-io-workspace-openapi.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 27
+  by_action_class:
+    connected: 22
+    acting: 5
+  by_consequence:
+    read: 22
+    write: 5
+  human_in_the_loop_required: 0
+operations:
+- path: /feedback_portals/{accountId}
+  method: get
+  operationId: GetPortals
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feedback_portals
+  method: get
+  operationId: GetPortalsExtended
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feedback_portal/{portalId}/categories
+  method: get
+  operationId: GetCategories
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feedback_portal/{portalId}/importances
+  method: get
+  operationId: GetImportances
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feedback_portal/{portalId}/feedback_items
+  method: get
+  operationId: GetIdeas
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feedback_item/{ideaId}
+  method: get
+  operationId: GetIdea
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feedback_portal/{portalId}/plain_feedback
+  method: post
+  operationId: PostPlainIdea
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - write:feedback:craft
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /feedback_portal/{portalId}/feedback
+  method: post
+  operationId: PostIdea
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - write:feedback:craft
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /feedback_portal/{portalId}/custom_fields
+  method: get
+  operationId: GetCustomFields
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /feedback_portal/{portalId}/forms
+  method: get
+  operationId: GetForms
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:feedback:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /portfolios/{accountId}
+  method: get
+  operationId: GetPortfolios
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:portfolios:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /portfolio/{portfolioId}/portfolio_fields
+  method: get
+  operationId: GetPortfolioCustomFields
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:portfolios:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /portfolio/{portfolioId}/terminology
+  method: get
+  operationId: GetPortfolioTerminology
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:portfolios:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /workspaces/{accountId}
+  method: get
+  operationId: GetWorkspaces
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:workspace-meta:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /workspaces
+  method: get
+  operationId: GetWorkspacesByKey
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:workspace-meta:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /workspace/{workspaceId}/custom_fields
+  method: get
+  operationId: GetCustomFields
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:workspace-meta:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /workspace/{workspaceId}/terminology
+  method: get
+  operationId: GetTerminology
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:workspace-meta:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /me/api-key
+  method: get
+  operationId: GetMyApiKey
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /item/{itemId}
+  method: get
+  operationId: GetItem
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:items:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /item/{itemId}
+  method: delete
+  operationId: DeleteItem
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - delete:items:craft
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /item/{itemId}/flat
+  method: get
+  operationId: GetItemFlat
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:items:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /workspace/{workspaceId}/items
+  method: get
+  operationId: GetItems
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:items:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /workspace/{workspaceId}/items/flat
+  method: get
+  operationId: GetItemsFlat
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:items:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /portfolio_item/{itemId}
+  method: get
+  operationId: GetInitiative
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:portfolios:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /portfolio/{portfolioId}/items
+  method: get
+  operationId: GetInitiatives
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read:portfolios:craft
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /item
+  method: post
+  operationId: CreateItem
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - write:items:craft
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /item
+  method: put
+  operationId: UpdateItem
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - write:items:craft
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required

@@ -84,6 +84,8 @@ apis:
         url: https://help.craft.io/
         email: support@craft.io
 common:
+  - type: AgenticAccess
+    url: agentic-access/craft-io-agentic-access.yml
   - type: DomainSecurity
     url: security/craft-io-domain-security.yml
   - type: Authentication
