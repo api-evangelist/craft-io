@@ -1,0 +1,538 @@
+openapi: 3.0.0
+info:
+  title: Craft.io Feedback Portal Feedback items Feedback Portals API
+  description: REST API for managing customer feedback portals, including listing portals and categories, retrieving feedback items, and submitting new feedback via POST requests.
+  version: 1.0.0
+  contact:
+    name: Craft.io Support
+    url: https://help.craft.io/
+    email: support@craft.io
+servers:
+- url: /
+tags:
+- name: Feedback Portals
+  description: Feedback portals are the areas where various stakeholders submit their product related feedbacks
+paths:
+  /feedback_portals/{accountId}:
+    get:
+      operationId: GetPortals
+      responses:
+        '200':
+          description: A list of feedback portals
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FeedbackPortal'
+                type: array
+              examples:
+                Example 1:
+                  value:
+                  - id: '2305843010022720311'
+                    name: My Favorite portal
+                    url: myportal
+                  - id: '2305843010022720322'
+                    name: Secret portal
+                    url: secretportal
+        '400':
+          description: Invalid account ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching feedback portals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the list of your account’s feedback portals
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: accountId
+        required: true
+        schema:
+          type: string
+  /feedback_portals:
+    get:
+      operationId: GetPortalsExtended
+      responses:
+        '200':
+          description: A list of feedback portals
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FeedbackPortal'
+                type: array
+              examples:
+                Example 1:
+                  value:
+                  - id: '2305843010022720311'
+                    name: My Favorite portal
+                    url: myportal
+                  - id: '2305843010022720322'
+                    name: Secret portal
+                    url: secretportal
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching feedback portals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the list of your account’s feedback portals
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - description: Filter by single portal
+        in: query
+        name: portalId
+        required: false
+        schema:
+          type: string
+  /feedback_portal/{portalId}/categories:
+    get:
+      operationId: GetCategories
+      responses:
+        '200':
+          description: A list of categories in a feedback portal
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/FeedbackPortal'
+                type: array
+              examples:
+                Example 1:
+                  value:
+                  - id: '2305843010122720311'
+                    name: General
+                  - id: '2305843010222720322'
+                    name: My favorite category
+        '400':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching categories in a feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the list of the feedback portal categories
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: workspaceId
+        required: false
+        schema:
+          default: ''
+          type: string
+  /feedback_portal/{portalId}/importances:
+    get:
+      operationId: GetImportances
+      responses:
+        '200':
+          description: A list of importances in a feedback portal
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PortalImportance'
+                type: array
+              examples:
+                Example 1:
+                  value:
+                  - id: '2305843010122720555'
+                    name: Critical
+                    isDefault: false
+                  - id: '2305843010122720556'
+                    name: Nice to Have
+                    isDefault: true
+        '400':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching importances in a feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the list of the feedback portal importances.
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+  /feedback_portal/{portalId}/custom_fields:
+    get:
+      operationId: GetCustomFields
+      responses:
+        '200':
+          description: A list of feedback portal custom fields and their metadata
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/CustomField'
+                type: array
+        '400':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching custom fields in a feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the list of your feedback portal's custom fields
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: includeOptions
+        required: false
+        schema:
+          default: false
+          type: boolean
+  /feedback_portal/{portalId}/forms:
+    get:
+      operationId: GetForms
+      responses:
+        '200':
+          description: A list of feedback portal forms and their metadata
+          content:
+            application/json:
+              schema:
+                properties:
+                  forms:
+                    items:
+                      $ref: '#/components/schemas/PortalForm'
+                    type: array
+                  metadata:
+                    properties:
+                      count:
+                        type: number
+                        format: double
+                      portalId:
+                        type: string
+                    required:
+                    - count
+                    - portalId
+                    type: object
+                required:
+                - forms
+                - metadata
+                type: object
+        '400':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching forms in a feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the list of your feedback portal's forms
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      - description: Filter by category
+        in: query
+        name: categoryId
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: includeOptions
+        required: false
+        schema:
+          default: false
+          type: boolean
+components:
+  schemas:
+    PortalForm:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categories:
+          items:
+            $ref: '#/components/schemas/Entity'
+          type: array
+        fields:
+          items:
+            $ref: '#/components/schemas/FormCustomField'
+          type: array
+      required:
+      - id
+      - name
+      - categories
+      - fields
+      type: object
+      additionalProperties: false
+    Workspace:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          nullable: true
+        key:
+          type: string
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+      type: object
+      additionalProperties: false
+    PortalImportance:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isDefault:
+          type: boolean
+          description: True when this importance is the portal's default — used by create_feedback when `importanceId` is omitted.
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
+    CustomFieldOption:
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        startDate:
+          type: string
+          nullable: true
+        endDate:
+          type: string
+          nullable: true
+      required:
+      - id
+      - label
+      type: object
+      additionalProperties: false
+    Entity:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          nullable: true
+      type: object
+      additionalProperties: false
+    FormCustomField:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        values:
+          items:
+            type: string
+          type: array
+        options:
+          items:
+            $ref: '#/components/schemas/CustomFieldOption'
+          type: array
+        optionShape:
+          $ref: '#/components/schemas/OptionShape'
+        required:
+          type: boolean
+      required:
+      - id
+      - name
+      - type
+      - required
+      type: object
+      additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: false
+    FeedbackPortal:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          nullable: true
+        url:
+          type: string
+        workspaces:
+          items:
+            $ref: '#/components/schemas/Workspace'
+          type: array
+        webUrl:
+          type: string
+          description: Fully-qualified portal URL (https://{slug}.{FPURL}). Convenience over `url`.
+      type: object
+      additionalProperties: false
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
+    CustomField:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        values:
+          items:
+            type: string
+          type: array
+        options:
+          items:
+            $ref: '#/components/schemas/CustomFieldOption'
+          type: array
+        optionShape:
+          $ref: '#/components/schemas/OptionShape'
+      required:
+      - id
+      - name
+      - type
+      type: object
+      additionalProperties: false
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key

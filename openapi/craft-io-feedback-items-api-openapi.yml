@@ -1,0 +1,608 @@
+openapi: 3.0.0
+info:
+  title: Craft.io Feedback Portal Feedback items API
+  description: REST API for managing customer feedback portals, including listing portals and categories, retrieving feedback items, and submitting new feedback via POST requests.
+  version: 1.0.0
+  contact:
+    name: Craft.io Support
+    url: https://help.craft.io/
+    email: support@craft.io
+servers:
+- url: /
+tags:
+- name: Feedback items
+  description: Feedback items are the main building blocks of your product’s feedback process.
+paths:
+  /feedback_portal/{portalId}/feedback_items:
+    get:
+      operationId: GetIdeas
+      responses:
+        '200':
+          description: A list of items in a feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackItemsPaginated_FeedbackItem_'
+              examples:
+                Example 1:
+                  value:
+                  - id: '2305843010159177973'
+                    portalId: '2305843009928936739'
+                    shortId: DAR-6
+                    title: '1'
+                    description: qdw
+                    category:
+                      id: '2305843009943746454'
+                      name: '1'
+                    status:
+                      id: '2305843009928936743'
+                      name: New
+                    internalStatus:
+                      id: '2305843009943114957'
+                      name: Not a Priority
+                    importance:
+                      id: '2305843009928936757'
+                      name: Nice to Have
+                    creationTime: '2022-06-16T17:06:30.000Z'
+                    createdBy:
+                      id: '2305843009550306942'
+                      name: John Doe
+                    owner:
+                      id: '2305843009550306943'
+                      name: Jane Doe
+                    labels:
+                    - Label 1
+                    - Label 2
+        '400':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching ideas in a feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the list of your feedback portal's items
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: workspaceId
+        required: false
+        schema:
+          default: ''
+          type: string
+      - in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: double
+          type: number
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 25
+          format: double
+          type: number
+      - description: Case-insensitive substring search over title + description. Min 2 chars; shorter values are ignored.
+        in: query
+        name: keyword
+        required: false
+        schema:
+          type: string
+      - description: Exact match on textual short id (e.g. `CRK-3563`). When supplied, takes precedence over `keyword`.
+        in: query
+        name: shortId
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: fields
+        required: false
+        schema:
+          type: string
+      - description: Comma-separated numeric feedback IDs (e.g. `2305843…,2305843…`). Use when you already know which feedback items you need — e.g. the IDs returned by `get_item.feedbackLinks` — and want their metadata in one shot instead of paginating the portal.
+        in: query
+        name: ids
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: internalStatus
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: importance
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: company
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: labels
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: hasLinkedItems
+        required: false
+        schema:
+          type: boolean
+      - in: query
+        name: postedBy
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: created_from
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - in: query
+        name: created_to
+        required: false
+        schema:
+          format: date-time
+          type: string
+  /feedback_item/{ideaId}:
+    get:
+      operationId: GetIdea
+      responses:
+        '200':
+          description: Get a feedback item by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackItem'
+              examples:
+                Example 1:
+                  value:
+                  - id: '2305843010159177973'
+                    portalId: '2305843009928936739'
+                    shortId: DAR-6
+                    title: '1'
+                    description: qdw
+                    category:
+                      id: '2305843009943746454'
+                      name: '1'
+                    status:
+                      id: '2305843009928936743'
+                      name: New
+                    internalStatus:
+                      id: '2305843009943114957'
+                      name: Not a Priority
+                    importance:
+                      id: '2305843009928936757'
+                      name: Nice to Have
+                    creationTime: '2022-06-16T17:06:30.000Z'
+                    createdBy:
+                      id: '2305843009550306942'
+                      name: John Doe
+                    owner:
+                      id: '2305843009550306943'
+                      name: Jane Doe
+                    labels:
+                    - Label 1
+                    - Label 2
+        '400':
+          description: Invalid item ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No idea found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching ideas in a feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get a feedback item by id
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: ideaId
+        required: true
+        schema:
+          type: string
+  /feedback_portal/{portalId}/plain_feedback:
+    post:
+      operationId: PostPlainIdea
+      responses:
+        '200':
+          description: Create a plain feedback
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Example 1:
+                  value:
+                    id: '2305456780315711635'
+                    shortId: AAR-15
+                    link: https://portal.ideas-test.craft.io/DAR-15
+        '400':
+          description: Invalid item ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while creating a plain feedback
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Create new plain feedbacks and submit to the desired feedback portal for further evaluation
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlainIdeaRequest'
+  /feedback_portal/{portalId}/feedback:
+    post:
+      operationId: PostIdea
+      responses:
+        '200':
+          description: Create a plain feedback
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Example 1:
+                  value:
+                    id: '2305456780315711635'
+                    shortId: AAR-15
+                    link: https://portal.ideas-test.craft.io/DAR-15
+        '400':
+          description: Invalid item ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while creating a plain feedback
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Create a new feedback and submit to the desired feedback portal for further evaluation
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdeaRequest'
+components:
+  schemas:
+    Person:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+      type: object
+      additionalProperties: false
+    FeedbackItem:
+      $ref: '#/components/schemas/BaseFeedbackItem'
+    BaseFeedbackItem:
+      properties:
+        id:
+          type: string
+        portalId:
+          type: string
+        shortId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        creationTime:
+          type: string
+          format: date-time
+        category:
+          $ref: '#/components/schemas/Category'
+        owner:
+          $ref: '#/components/schemas/Person'
+        createdBy:
+          $ref: '#/components/schemas/Person'
+        status:
+          $ref: '#/components/schemas/Entity'
+        internalStatus:
+          $ref: '#/components/schemas/Entity'
+        importance:
+          $ref: '#/components/schemas/Entity'
+        labels:
+          items:
+            type: string
+          type: array
+        customFields:
+          items:
+            $ref: '#/components/schemas/CustomFieldValue'
+          type: array
+        linkedItems:
+          $ref: '#/components/schemas/NullableType_LinkedItem-Array_'
+        webUrl:
+          type: string
+          description: Direct link into the feedback portal for this feedback item.
+      required:
+      - id
+      type: object
+      additionalProperties: false
+    NullableType_string-Array_:
+      items:
+        type: string
+      type: array
+      nullable: true
+    NullableType_string_:
+      type: string
+      nullable: true
+    NullableType_LinkedItem-Array_:
+      items:
+        $ref: '#/components/schemas/LinkedItem'
+      type: array
+      nullable: true
+    CustomFieldValue:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          $ref: '#/components/schemas/NullableType_string_'
+        values:
+          $ref: '#/components/schemas/NullableType_string-Array_'
+        label:
+          type: string
+      required:
+      - id
+      type: object
+      additionalProperties: false
+    Entity:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          nullable: true
+      type: object
+      additionalProperties: false
+    IdeaRequest:
+      properties:
+        workspaceId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+          description: "Email address of the idea author. The backend looks up (or creates) the\r\nperson record from this email and attributes the feedback to them. This\r\nis NOT a user ID — sending a numeric ID will return 400."
+          example: user@example.com
+        categoryId:
+          type: string
+        labels:
+          items:
+            type: string
+          type: array
+        importanceId:
+          type: string
+          description: "Portal importance — numeric ID OR exact name (case-insensitive). When\r\nomitted, the portal's `isDefault: true` importance is used (see\r\n`GET /feedback_portal/{portalId}/importances`)."
+          example: Critical
+        customFields:
+          items:
+            $ref: '#/components/schemas/CustomFieldValue'
+          type: array
+      required:
+      - title
+      type: object
+      additionalProperties: false
+    LinkedItem:
+      properties:
+        id:
+          type: string
+        shortId:
+          type: string
+        title:
+          type: string
+        webUrl:
+          type: string
+          description: Direct link to the linked work item in the Craft.io app.
+      type: object
+      additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: false
+    Category:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
+    FeedbackItemsPaginated_FeedbackItem_:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeedbackItem'
+          type: array
+        metadata:
+          $ref: '#/components/schemas/PaginationMetadata'
+      required:
+      - items
+      - metadata
+      type: object
+      additionalProperties: false
+    PlainIdeaRequest:
+      properties:
+        workspaceId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+          description: "Email address of the idea author. The backend looks up (or creates) the\r\nperson record from this email and attributes the feedback to them. This\r\nis NOT a user ID — sending a numeric ID will return 400."
+          example: user@example.com
+        categoryId:
+          type: string
+        labels:
+          items:
+            type: string
+          type: array
+        importanceId:
+          type: string
+          description: "Portal importance — numeric ID OR exact name (case-insensitive). When\r\nomitted, the portal's `isDefault: true` importance is used (see\r\n`GET /feedback_portal/{portalId}/importances`)."
+          example: Critical
+      required:
+      - title
+      type: object
+      additionalProperties: false
+    PaginationMetadata:
+      properties:
+        currentPage:
+          type: number
+          format: double
+        perPage:
+          type: number
+          format: double
+        totalPages:
+          type: number
+          format: double
+        totalRecords:
+          type: number
+          format: double
+      required:
+      - currentPage
+      - perPage
+      - totalPages
+      - totalRecords
+      type: object
+      additionalProperties: false
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
