@@ -4,7 +4,20 @@ description: Craft.io is a product management platform with a REST API for manag
   teams. The public API provides enterprise customers programmatic access to workspace,
   portfolio, and feedback portal data, enabling integration with BI tools and organizational
   communication channels.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/craft-io.png
 url: https://raw.githubusercontent.com/api-evangelist/craft-io/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
@@ -19,70 +32,148 @@ tags:
   - Portfolio
   - Specifications
 apis:
-  - name: Craft.io Workspace API
-    description: REST API providing access to workspace data including work items,
-      custom fields, terminology, initiatives, products, epics, features, and stories
-      within Craft.io product workspaces.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
-    baseURL: https://api.craft.io
-    tags:
-      - Workspace
-      - Work Items
-      - Product Management
-    properties:
-      - type: Documentation
-        url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
-      - type: Swagger
-        url: https://api.craft.io/docs
-      - type: SwaggerEU
-        url: https://api-eu.craft.io/docs
-    contact:
-      - FN: Craft.io Support
-        url: https://help.craft.io/
-        email: support@craft.io
-  - name: Craft.io Portfolio API
-    description: REST API providing access to portfolio data including portfolio items,
-      portfolio custom fields, and terminology for enterprise product portfolio management.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
-    baseURL: https://api.craft.io
-    tags:
-      - Portfolio
-      - Product Portfolio Management
-    properties:
-      - type: Documentation
-        url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
-      - type: Swagger
-        url: https://api.craft.io/docs
-      - type: SwaggerEU
-        url: https://api-eu.craft.io/docs
-    contact:
-      - FN: Craft.io Support
-        url: https://help.craft.io/
-        email: support@craft.io
-  - name: Craft.io Feedback Portal API
-    description: REST API for managing customer feedback portals, including listing
-      portals and categories, retrieving feedback items, and submitting new feedback
-      via POST requests.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
-    baseURL: https://api.craft.io
-    tags:
-      - Feedback
-      - Customer Feedback
-      - Feedback Portal
-    properties:
-      - type: Documentation
-        url: https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
-      - type: Swagger
-        url: https://api.craft.io/docs
-      - type: SwaggerEU
-        url: https://api-eu.craft.io/docs
-    contact:
-      - FN: Craft.io Support
-        url: https://help.craft.io/
-        email: support@craft.io
+- name: Craft.io Workspace API
+  description: >-
+    REST API providing access to workspace data including work items, custom fields, terminology, initiatives,
+    products, epics, features, and stories within Craft.io product workspaces.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Workspace
+  - Work Items
+  - Product Management
+  properties:
+  - type: Documentation
+    url: >-
+      https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  - type: Swagger
+    url: https://api.craft.io/docs
+  - type: SwaggerEU
+    url: https://api-eu.craft.io/docs
+  contact:
+  - FN: Craft.io Support
+    url: https://help.craft.io/
+    email: support@craft.io
+- name: Craft.io Portfolio API
+  description: >-
+    REST API providing access to portfolio data including portfolio items, portfolio custom fields, and
+    terminology for enterprise product portfolio management.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Portfolio
+  - Product Portfolio Management
+  properties:
+  - type: Documentation
+    url: >-
+      https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  - type: Swagger
+    url: https://api.craft.io/docs
+  - type: SwaggerEU
+    url: https://api-eu.craft.io/docs
+  contact:
+  - FN: Craft.io Support
+    url: https://help.craft.io/
+    email: support@craft.io
+- name: Craft.io Feedback Portal API
+  description: >-
+    REST API for managing customer feedback portals, including listing portals and categories, retrieving
+    feedback items, and submitting new feedback via POST requests.
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Feedback
+  - Customer Feedback
+  - Feedback Portal
+  properties:
+  - type: Documentation
+    url: >-
+      https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  - type: Swagger
+    url: https://api.craft.io/docs
+  - type: SwaggerEU
+    url: https://api-eu.craft.io/docs
+  contact:
+  - FN: Craft.io Support
+    url: https://help.craft.io/
+    email: support@craft.io
+- aid: craft-io:craft-io-feedback-items-api
+  name: Craft.io Feedback items API
+  description: Feedback items are the main building blocks of your product’s feedback process.
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Feedback items
+  properties:
+  - type: OpenAPI
+    url: openapi/craft-io-feedback-items-api-openapi.yml
+- aid: craft-io:craft-io-feedback-portals-api
+  name: Craft.io Feedback Portals API
+  description: >-
+    Feedback portals are the areas where various stakeholders submit their product related feedbacks
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Feedback Portals
+  properties:
+  - type: OpenAPI
+    url: openapi/craft-io-feedback-portals-api-openapi.yml
+- aid: craft-io:craft-io-introspection-api
+  name: Craft.io Introspection API
+  description: The Introspection API from Craft.io — 1 operation(s) for introspection.
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Introspection
+  properties:
+  - type: OpenAPI
+    url: openapi/craft-io-introspection-api-openapi.yml
+- aid: craft-io:craft-io-portfolios-api
+  name: Craft.io Portfolios API
+  description: The Portfolios API from Craft.io — 3 operation(s) for portfolios.
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Portfolios
+  properties:
+  - type: OpenAPI
+    url: openapi/craft-io-portfolios-api-openapi.yml
+- aid: craft-io:craft-io-work-items-and-okrs-api
+  name: Craft.io Work Items and OKRs API
+  description: >-
+    Work items are the main building blocks of your product’s roadmap, and include Products, Epics, Features
+    and Sub Features.<br /> OKRs are the goal-setting framework of your product’s roadmap, and include
+    Objectives and Key Results.
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Work Items and OKRs
+  properties:
+  - type: OpenAPI
+    url: openapi/craft-io-work-items-and-okrs-api-openapi.yml
+- aid: craft-io:craft-io-workspaces-api
+  name: Craft.io Workspaces API
+  description: >-
+    Workspaces are the areas where product teams are managing the full lifecycle of their products
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Workspaces
+  properties:
+  - type: OpenAPI
+    url: openapi/craft-io-workspaces-api-openapi.yml
 common:
   - type: AgenticAccess
     url: agentic-access/craft-io-agentic-access.yml
