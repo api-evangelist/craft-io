@@ -1,0 +1,24 @@
+{
+  "provider": "craft-io",
+  "sources": [
+    "craft-io-feedback-items-api-openapi.yml",
+    "craft-io-feedback-portals-api-openapi.yml",
+    "craft-io-introspection-api-openapi.yml",
+    "craft-io-portfolios-api-openapi.yml",
+    "craft-io-work-items-and-okrs-api-openapi.yml",
+    "craft-io-workspaces-api-openapi.yml"
+  ],
+  "outputs": [
+    "craft-io-feedback-items-api-openapi.yml",
+    "craft-io-feedback-portals-api-openapi.yml",
+    "craft-io-introspection-api-openapi.yml",
+    "craft-io-portfolios-api-openapi.yml",
+    "craft-io-work-items-and-okrs-api-openapi.yml",
+    "craft-io-workspaces-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
