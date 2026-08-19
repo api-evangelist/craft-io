@@ -1,0 +1,112 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Craft.io Feedback Portal Feedback items Workspaces API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workspaces",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetWorkspaces",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/workspaces/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of your account’s workspaces (workspace ID & name)"
+        },
+        {
+          "info": {
+            "name": "GetWorkspacesByKey",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/workspaces",
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of your account’s workspaces (workspace ID & name)"
+        },
+        {
+          "info": {
+            "name": "GetCustomFields",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/workspace/:workspaceId/custom_fields",
+            "params": [
+              {
+                "name": "workspaceId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "includeOptions",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of all workspace custom fields and their metadata"
+        },
+        {
+          "info": {
+            "name": "GetTerminology",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/workspace/:workspaceId/terminology",
+            "params": [
+              {
+                "name": "workspaceId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of the workspace entities terminology"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,184 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Craft.io Feedback Portal Feedback items Feedback Portals API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feedback Portals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetPortals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_portals/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of your account’s feedback portals"
+        },
+        {
+          "info": {
+            "name": "GetPortalsExtended",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_portals",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by single portal"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of your account’s feedback portals"
+        },
+        {
+          "info": {
+            "name": "GetCategories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_portal/:portalId/categories",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "workspaceId",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of the feedback portal categories"
+        },
+        {
+          "info": {
+            "name": "GetImportances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_portal/:portalId/importances",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of the feedback portal importances."
+        },
+        {
+          "info": {
+            "name": "GetCustomFields",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_portal/:portalId/custom_fields",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "includeOptions",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of your feedback portal's custom fields"
+        },
+        {
+          "info": {
+            "name": "GetForms",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_portal/:portalId/forms",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "categoryId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by category"
+              },
+              {
+                "name": "includeOptions",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of your feedback portal's forms"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,172 @@
+{
+  "item": [
+    {
+      "id": "a4e92fe6-ddfb-4a53-902a-ba7e21e9cd1c",
+      "name": "Introspection",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f1df1fd0-c5aa-4e81-ae25-d3d39b91fecd",
+          "name": "Get My Api Key",
+          "request": {
+            "name": "Get My Api Key",
+            "description": {
+              "content": "Returns the current API key's authorization context — its bound user,\ngranted scopes, and any resource-scope narrowing. Useful for AI clients\n(MCP) to hide tools that the key cannot use, instead of failing at the\nfirst request.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "me",
+                "api-key"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-api-key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "e2070c66-dfa9-421e-b862-00eba8ef4c6e",
+              "name": "API key introspection",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "me",
+                    "api-key"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"userId\": \"string\",\n  \"accountId\": \"string\",\n  \"scopes\": [\n    \"string\",\n    \"string\"\n  ],\n  \"resourceScope\": {\n    \"feedback_portals\": [\n      \"string\",\n      \"string\"\n    ],\n    \"portfolios\": [\n      \"string\",\n      \"string\"\n    ],\n    \"workspaces\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"mcpAccess\": false\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3a816d9a-1cd4-4915-ba7f-c3caab1075a6",
+              "name": "No valid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "me",
+                    "api-key"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "dfba7d1e-2667-485d-9da8-9f83834ff4e5",
+    "name": "Craft.io Feedback Portal Feedback items Introspection API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST API for managing customer feedback portals, including listing portals and categories, retrieving feedback items, and submitting new feedback via POST requests.\n\nContact Support:\n Name: Craft.io Support\n Email: support@craft.io",
+      "type": "text/plain"
+    }
+  }
+}

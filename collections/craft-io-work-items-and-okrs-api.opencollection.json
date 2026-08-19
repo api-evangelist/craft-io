@@ -1,0 +1,537 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Craft.io Feedback Portal Feedback items Work Items and OKRs API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Work Items and OKRs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/item/:itemId",
+            "params": [
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated field list to be included in response, set \"all\" for all fields"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a specific work item metadata by its ID"
+        },
+        {
+          "info": {
+            "name": "DeleteItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/item/:itemId",
+            "params": [
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Delete a work item"
+        },
+        {
+          "info": {
+            "name": "GetItemFlat",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/item/:itemId/flat",
+            "params": [
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated field list to be included in response, set \"all\" for all fields"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a specific work item metadata by its ID (flattened format)"
+        },
+        {
+          "info": {
+            "name": "GetItems",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/workspace/:workspaceId/items",
+            "params": [
+              {
+                "name": "workspaceId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated field list to be included in response, set \"all\" for all fields"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "updated_from",
+                "value": "",
+                "type": "query",
+                "description": "Get list of items updated after this date (e.g. 2023-08-09T12:33:18.615Z )"
+              },
+              {
+                "name": "updated_to",
+                "value": "",
+                "type": "query",
+                "description": "Get list of items updated before this date (e.g. 2023-09-09T23:22:10.531Z )"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by item type (default term), comma separated"
+              },
+              {
+                "name": "parents",
+                "value": "",
+                "type": "query",
+                "description": "Filter by parent/ancestor IDs (comma separated). MUST be internal numeric IDs (e.g. `2305843010635321210`), NOT shortIds like `CRK-25832` — the SQL casts to `::bigint[]`, so a shortId yields zero matches (200 with an empty list, no error). To resolve a shortId first, call the same list endpoint with `?shortId=<KEY-N>` to get the numeric id."
+              },
+              {
+                "name": "keyword",
+                "value": "",
+                "type": "query",
+                "description": "Case-insensitive substring search over title + description. Min 2 chars; shorter values are ignored."
+              },
+              {
+                "name": "shortId",
+                "value": "",
+                "type": "query",
+                "description": "Exact match on textual short id (e.g. `CRK-20091`). When supplied, takes precedence over `keyword` and resolves via the `(ct_craft_product__id, short_id)` unique index — sub-millisecond, returns at most one item."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "importance",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "assignee",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sprint",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "quarter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "labels",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "createdBy",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_to",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get all workspace working items and OKRs metadata by the workspace ID"
+        },
+        {
+          "info": {
+            "name": "GetItemsFlat",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/workspace/:workspaceId/items/flat",
+            "params": [
+              {
+                "name": "workspaceId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated field list to be included in response, set \"all\" for all fields"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "updated_from",
+                "value": "",
+                "type": "query",
+                "description": "Get list of items updated after this date (e.g. 2023-08-09T12:33:18.615Z )"
+              },
+              {
+                "name": "updated_to",
+                "value": "",
+                "type": "query",
+                "description": "Get list of items updated before this date (e.g. 2023-09-09T23:22:10.531Z )"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by item types (default term), comma separated"
+              },
+              {
+                "name": "parents",
+                "value": "",
+                "type": "query",
+                "description": "Filter by parent/ancestor IDs (comma separated). MUST be internal numeric IDs (e.g. `2305843010635321210`), NOT shortIds like `CRK-25832` — the SQL casts to `::bigint[]`, so a shortId yields zero matches (200 with an empty list, no error). To resolve a shortId first, call the same list endpoint with `?shortId=<KEY-N>` to get the numeric id."
+              },
+              {
+                "name": "keyword",
+                "value": "",
+                "type": "query",
+                "description": "Case-insensitive substring search over title + description. Min 2 chars; shorter values are ignored."
+              },
+              {
+                "name": "shortId",
+                "value": "",
+                "type": "query",
+                "description": "Exact match on textual short id (e.g. `CRK-20091`). When supplied, takes precedence over `keyword` and resolves via the `(ct_craft_product__id, short_id)` unique index."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "importance",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "assignee",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sprint",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "quarter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "labels",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "createdBy",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_to",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get all workspace working items and OKRs metadata by the workspace ID (flattened format)"
+        },
+        {
+          "info": {
+            "name": "GetInitiative",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/portfolio_item/:itemId",
+            "params": [
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated field list to be included in response, set \"all\" for all fields"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a specific portfolio item metadata by its ID"
+        },
+        {
+          "info": {
+            "name": "GetInitiatives",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/portfolio/:portfolioId/items",
+            "params": [
+              {
+                "name": "portfolioId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma separated field list to be included in response, set \"all\" for all fields"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "updated_from",
+                "value": "",
+                "type": "query",
+                "description": "Get list of items updated after this date (e.g. 2023-08-09T12:33:18.615Z )"
+              },
+              {
+                "name": "updated_to",
+                "value": "",
+                "type": "query",
+                "description": "Get list of items updated before this date (e.g. 2023-09-09T23:22:10.531Z )"
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter by item type (default term)"
+              },
+              {
+                "name": "parents",
+                "value": "",
+                "type": "query",
+                "description": "Filter by parent/ancestor IDs (comma separated). MUST be internal numeric IDs (e.g. `2305843010635321210`), NOT shortIds like `CRK-25832` — the SQL casts to `::bigint[]`, so a shortId yields zero matches (200 with an empty list, no error). To resolve a shortId first, call the same list endpoint with `?shortId=<KEY-N>` to get the numeric id."
+              },
+              {
+                "name": "keyword",
+                "value": "",
+                "type": "query",
+                "description": "Case-insensitive substring search over title + description. Min 2 chars; shorter values are ignored."
+              },
+              {
+                "name": "shortId",
+                "value": "",
+                "type": "query",
+                "description": "Exact match on textual short id (e.g. `CRK-20091`). When supplied, takes precedence over `keyword`."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "importance",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "createdBy",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_to",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sprint",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "quarter",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "labels",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "assignee",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get all portfolio initiatives and OKRs metadata by the portfolio ID"
+        },
+        {
+          "info": {
+            "name": "CreateItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/item",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create a work item"
+        },
+        {
+          "info": {
+            "name": "UpdateItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/item",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Update a work item"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

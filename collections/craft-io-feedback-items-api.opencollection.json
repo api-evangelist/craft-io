@@ -1,0 +1,210 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Craft.io Feedback Portal Feedback items API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Feedback items",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GetIdeas",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_portal/:portalId/feedback_items",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "workspaceId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "keyword",
+                "value": "",
+                "type": "query",
+                "description": "Case-insensitive substring search over title + description. Min 2 chars; shorter values are ignored."
+              },
+              {
+                "name": "shortId",
+                "value": "",
+                "type": "query",
+                "description": "Exact match on textual short id (e.g. `CRK-3563`). When supplied, takes precedence over `keyword`."
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated numeric feedback IDs (e.g. `2305843…,2305843…`). Use when you already know which feedback items you need — e.g. the IDs returned by `get_item.feedbackLinks` — and want their metadata in one shot instead of paginating the portal."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "internalStatus",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "importance",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "company",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "labels",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "hasLinkedItems",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "postedBy",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_from",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "created_to",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get the list of your feedback portal's items"
+        },
+        {
+          "info": {
+            "name": "GetIdea",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/feedback_item/:ideaId",
+            "params": [
+              {
+                "name": "ideaId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get a feedback item by id"
+        },
+        {
+          "info": {
+            "name": "PostPlainIdea",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/feedback_portal/:portalId/plain_feedback",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create new plain feedbacks and submit to the desired feedback portal for further evaluation"
+        },
+        {
+          "info": {
+            "name": "PostIdea",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/feedback_portal/:portalId/feedback",
+            "params": [
+              {
+                "name": "portalId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Create a new feedback and submit to the desired feedback portal for further evaluation"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
