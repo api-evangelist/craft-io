@@ -144,6 +144,8 @@ apis:
     https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
   baseURL: https://api.craft.io
   tags:
+  - Portfolio
+  tags_raw:
   - Portfolios
   properties:
   - type: OpenAPI
