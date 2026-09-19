@@ -43,6 +43,14 @@ tags:
   - Backlog
   - Feedback
   - Portfolio
+  - Specification
+tags_raw:
+  - Product Management
+  - Roadmaps
+  - OKRs
+  - Backlog
+  - Feedback
+  - Portfolio
   - Specifications
 apis:
 - name: Craft.io Workspace API
@@ -185,6 +193,8 @@ apis:
     https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
   baseURL: https://api.craft.io
   tags:
+  - Workspace
+  tags_raw:
   - Workspaces
   properties:
   - type: OpenAPI
