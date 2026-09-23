@@ -1,7 +1,7 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  title: Craft.io Feedback Portal Feedback items Portfolios API
-  description: REST API for managing customer feedback portals, including listing portals and categories, retrieving feedback items, and submitting new feedback via POST requests.
+  title: Craft.io Portfolio Portfolios API
+  description: REST API providing access to portfolio data including portfolio items, portfolio custom fields, and terminology for enterprise product portfolio management.
   version: 1.0.0
   contact:
     name: Craft.io Support
@@ -70,6 +70,8 @@ paths:
         required: true
         schema:
           type: string
+      summary: Get portfolios
+      x-summary-source: derived
   /portfolio/{portfolioId}/portfolio_fields:
     get:
       operationId: GetPortfolioCustomFields
@@ -118,6 +120,8 @@ paths:
         required: true
         schema:
           type: string
+      summary: Get portfolio custom fields
+      x-summary-source: derived
   /portfolio/{portfolioId}/terminology:
     get:
       operationId: GetPortfolioTerminology
@@ -164,31 +168,18 @@ paths:
         required: true
         schema:
           type: string
+      summary: Get portfolio terminology
+      x-summary-source: derived
 components:
   schemas:
-    Terminology:
-      properties:
-        category:
-          type: string
-        default:
-          type: string
-        customSingle:
-          type: string
-        customPlural:
-          type: string
-      required:
-      - category
-      - default
-      - customSingle
-      type: object
-      additionalProperties: false
     Workspace:
       properties:
         id:
           type: string
         name:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         key:
           type: string
         webUrl:
@@ -196,6 +187,12 @@ components:
           description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
       type: object
       additionalProperties: false
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
     CustomFieldOption:
       properties:
         id:
@@ -203,11 +200,13 @@ components:
         label:
           type: string
         startDate:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         endDate:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
       required:
       - id
       - label
@@ -218,8 +217,9 @@ components:
         id:
           type: string
         name:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
         workspaces:
           items:
             $ref: '#/components/schemas/Workspace'
@@ -239,12 +239,22 @@ components:
       - message
       type: object
       additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
+    Terminology:
+      properties:
+        category:
+          type: string
+        default:
+          type: string
+        customSingle:
+          type: string
+        customPlural:
+          type: string
+      required:
+      - category
+      - default
+      - customSingle
+      type: object
+      additionalProperties: false
     CustomField:
       properties:
         id:

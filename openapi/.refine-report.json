@@ -1,24 +1,35 @@
 {
   "provider": "craft-io",
   "sources": [
-    "craft-io-feedback-items-api-openapi.yml",
-    "craft-io-feedback-portals-api-openapi.yml",
-    "craft-io-introspection-api-openapi.yml",
-    "craft-io-portfolios-api-openapi.yml",
-    "craft-io-work-items-and-okrs-api-openapi.yml",
-    "craft-io-workspaces-api-openapi.yml"
+    "_original/craft-io-feedback-openapi.yml",
+    "_original/craft-io-portfolio-openapi.yml",
+    "_original/craft-io-workspace-openapi.yml"
   ],
   "outputs": [
-    "craft-io-feedback-items-api-openapi.yml",
     "craft-io-feedback-portals-api-openapi.yml",
-    "craft-io-introspection-api-openapi.yml",
+    "craft-io-feedback-items-api-openapi.yml",
     "craft-io-portfolios-api-openapi.yml",
+    "craft-io-introspection-api-openapi.yml",
     "craft-io-work-items-and-okrs-api-openapi.yml",
     "craft-io-workspaces-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "craft-io-feedback-openapi.yml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0; renamed 1 component key(s) illegal in 3.x (e.g. NullableType__id%3F%3Astring.name%3F%3Astring__)",
+    "craft-io-portfolio-openapi.yml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0; renamed 1 component key(s) illegal in 3.x (e.g. NullableType__id%3F%3Astring.name%3F%3Astring__)",
+    "craft-io-workspace-openapi.yml: upgraded openapi 3.0.0 -> OpenAPI 3.2.0; renamed 1 component key(s) illegal in 3.x (e.g. NullableType__id%3F%3Astring.name%3F%3Astring__)",
+    "craft-io-workspace-openapi.yml: declared missing tag: Introspection",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "craft-io-feedback-items-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "craft-io-feedback-portals-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "craft-io-introspection-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "craft-io-portfolios-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "craft-io-work-items-and-okrs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "craft-io-workspaces-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
