@@ -226,6 +226,22 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    Terminology:
+      properties:
+        category:
+          type: string
+        default:
+          type: string
+        customSingle:
+          type: string
+        customPlural:
+          type: string
+      required:
+      - category
+      - default
+      - customSingle
+      type: object
+      additionalProperties: false
     Workspace:
       properties:
         id:
@@ -241,12 +257,35 @@ components:
           description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
       type: object
       additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
+    TerminologyList_Terminology_:
+      properties: {}
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Terminology'
+    CustomField:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        values:
+          items:
+            type: string
+          type: array
+        options:
+          items:
+            $ref: '#/components/schemas/CustomFieldOption'
+          type: array
+        optionShape:
+          $ref: '#/components/schemas/OptionShape'
+      required:
+      - id
+      - name
+      - type
+      type: object
+      additionalProperties: false
     CustomFieldOption:
       properties:
         id:
@@ -274,51 +313,12 @@ components:
       - message
       type: object
       additionalProperties: false
-    Terminology:
-      properties:
-        category:
-          type: string
-        default:
-          type: string
-        customSingle:
-          type: string
-        customPlural:
-          type: string
-      required:
-      - category
-      - default
-      - customSingle
-      type: object
-      additionalProperties: false
-    CustomField:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        values:
-          items:
-            type: string
-          type: array
-        options:
-          items:
-            $ref: '#/components/schemas/CustomFieldOption'
-          type: array
-        optionShape:
-          $ref: '#/components/schemas/OptionShape'
-      required:
-      - id
-      - name
-      - type
-      type: object
-      additionalProperties: false
-    TerminologyList_Terminology_:
-      properties: {}
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/Terminology'
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
   securitySchemes:
     api_key:
       type: apiKey

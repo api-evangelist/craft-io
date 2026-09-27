@@ -392,29 +392,39 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Person:
+    NullableType_LinkedItem-Array_:
+      items:
+        $ref: '#/components/schemas/LinkedItem'
+      type:
+      - array
+      - 'null'
+    PaginationMetadata:
       properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        email:
-          type: string
-      type: object
-      additionalProperties: false
-    Category:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
+        currentPage:
+          type: number
+          format: double
+        perPage:
+          type: number
+          format: double
+        totalPages:
+          type: number
+          format: double
+        totalRecords:
+          type: number
+          format: double
       required:
-      - id
-      - name
+      - currentPage
+      - perPage
+      - totalPages
+      - totalRecords
       type: object
       additionalProperties: false
+    NullableType_string-Array_:
+      items:
+        type: string
+      type:
+      - array
+      - 'null'
     BaseFeedbackItem:
       properties:
         id:
@@ -493,39 +503,22 @@ components:
       - title
       type: object
       additionalProperties: false
-    FeedbackItem:
-      $ref: '#/components/schemas/BaseFeedbackItem'
-    NullableType_string-Array_:
-      items:
-        type: string
-      type:
-      - array
-      - 'null'
+    Person:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        email:
+          type: string
+      type: object
+      additionalProperties: false
     NullableType_string_:
       type:
       - string
       - 'null'
-    GeneralErrorResponse:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: false
-    LinkedItem:
-      properties:
-        id:
-          type: string
-        shortId:
-          type: string
-        title:
-          type: string
-        webUrl:
-          type: string
-          description: Direct link to the linked work item in the Craft.io app.
-      type: object
-      additionalProperties: false
     CustomFieldValue:
       properties:
         id:
@@ -550,6 +543,45 @@ components:
           type:
           - string
           - 'null'
+      type: object
+      additionalProperties: false
+    Category:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
+    FeedbackItemsPaginated_FeedbackItem_:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeedbackItem'
+          type: array
+        metadata:
+          $ref: '#/components/schemas/PaginationMetadata'
+      required:
+      - items
+      - metadata
+      type: object
+      additionalProperties: false
+    FeedbackItem:
+      $ref: '#/components/schemas/BaseFeedbackItem'
+    LinkedItem:
+      properties:
+        id:
+          type: string
+        shortId:
+          type: string
+        title:
+          type: string
+        webUrl:
+          type: string
+          description: Direct link to the linked work item in the Craft.io app.
       type: object
       additionalProperties: false
     IdeaRequest:
@@ -590,46 +622,14 @@ components:
       - title
       type: object
       additionalProperties: false
-    PaginationMetadata:
+    GeneralErrorResponse:
       properties:
-        currentPage:
-          type: number
-          format: double
-        perPage:
-          type: number
-          format: double
-        totalPages:
-          type: number
-          format: double
-        totalRecords:
-          type: number
-          format: double
+        message:
+          type: string
       required:
-      - currentPage
-      - perPage
-      - totalPages
-      - totalRecords
+      - message
       type: object
       additionalProperties: false
-    FeedbackItemsPaginated_FeedbackItem_:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/FeedbackItem'
-          type: array
-        metadata:
-          $ref: '#/components/schemas/PaginationMetadata'
-      required:
-      - items
-      - metadata
-      type: object
-      additionalProperties: false
-    NullableType_LinkedItem-Array_:
-      items:
-        $ref: '#/components/schemas/LinkedItem'
-      type:
-      - array
-      - 'null'
   securitySchemes:
     api_key:
       type: apiKey

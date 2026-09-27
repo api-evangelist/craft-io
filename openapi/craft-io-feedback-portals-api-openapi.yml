@@ -385,64 +385,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Workspace:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        key:
-          type: string
-        webUrl:
-          type: string
-          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
-      type: object
-      additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
-    CustomFieldOption:
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        startDate:
-          type:
-          - string
-          - 'null'
-        endDate:
-          type:
-          - string
-          - 'null'
-      required:
-      - id
-      - label
-      type: object
-      additionalProperties: false
-    GeneralErrorResponse:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: false
-    Entity:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-      type: object
-      additionalProperties: false
     FormCustomField:
       properties:
         id:
@@ -487,6 +429,64 @@ components:
         webUrl:
           type: string
           description: Fully-qualified portal URL (https://{slug}.{FPURL}). Convenience over `url`.
+      type: object
+      additionalProperties: false
+    Entity:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+      type: object
+      additionalProperties: false
+    Workspace:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+      type: object
+      additionalProperties: false
+    CustomFieldOption:
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        startDate:
+          type:
+          - string
+          - 'null'
+        endDate:
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      - label
+      type: object
+      additionalProperties: false
+    PortalImportance:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isDefault:
+          type: boolean
+          description: True when this importance is the portal's default — used by create_feedback when `importanceId` is omitted.
+      required:
+      - id
+      - name
       type: object
       additionalProperties: false
     CustomField:
@@ -534,20 +534,20 @@ components:
       - fields
       type: object
       additionalProperties: false
-    PortalImportance:
+    GeneralErrorResponse:
       properties:
-        id:
+        message:
           type: string
-        name:
-          type: string
-        isDefault:
-          type: boolean
-          description: True when this importance is the portal's default — used by create_feedback when `importanceId` is omitted.
       required:
-      - id
-      - name
+      - message
       type: object
       additionalProperties: false
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
   securitySchemes:
     api_key:
       type: apiKey
