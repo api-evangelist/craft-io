@@ -226,42 +226,12 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Terminology:
-      properties:
-        category:
-          type: string
-        default:
-          type: string
-        customSingle:
-          type: string
-        customPlural:
-          type: string
-      required:
-      - category
-      - default
-      - customSingle
-      type: object
-      additionalProperties: false
-    Workspace:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        key:
-          type: string
-        webUrl:
-          type: string
-          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
-      type: object
-      additionalProperties: false
-    TerminologyList_Terminology_:
-      properties: {}
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/Terminology'
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
     CustomField:
       properties:
         id:
@@ -286,6 +256,50 @@ components:
       - type
       type: object
       additionalProperties: false
+    Workspace:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+      type: object
+      additionalProperties: false
+    TerminologyList_Terminology_:
+      properties: {}
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Terminology'
+    Terminology:
+      properties:
+        category:
+          type: string
+        default:
+          type: string
+        customSingle:
+          type: string
+        customPlural:
+          type: string
+      required:
+      - category
+      - default
+      - customSingle
+      type: object
+      additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: false
     CustomFieldOption:
       properties:
         id:
@@ -305,20 +319,6 @@ components:
       - label
       type: object
       additionalProperties: false
-    GeneralErrorResponse:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
   securitySchemes:
     api_key:
       type: apiKey

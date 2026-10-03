@@ -172,56 +172,12 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Terminology:
-      properties:
-        category:
-          type: string
-        default:
-          type: string
-        customSingle:
-          type: string
-        customPlural:
-          type: string
-      required:
-      - category
-      - default
-      - customSingle
-      type: object
-      additionalProperties: false
-    Workspace:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        key:
-          type: string
-        webUrl:
-          type: string
-          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
-      type: object
-      additionalProperties: false
-    Portfolio:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        workspaces:
-          items:
-            $ref: '#/components/schemas/Workspace'
-          type: array
-        webUrl:
-          type: string
-          description: Canonical Craft.io app URL for this portfolio. Computed in PublishService.
-      required:
-      - workspaces
-      type: object
-      additionalProperties: false
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
     CustomField:
       properties:
         id:
@@ -265,6 +221,56 @@ components:
       - label
       type: object
       additionalProperties: false
+    Workspace:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+      type: object
+      additionalProperties: false
+    Terminology:
+      properties:
+        category:
+          type: string
+        default:
+          type: string
+        customSingle:
+          type: string
+        customPlural:
+          type: string
+      required:
+      - category
+      - default
+      - customSingle
+      type: object
+      additionalProperties: false
+    Portfolio:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        workspaces:
+          items:
+            $ref: '#/components/schemas/Workspace'
+          type: array
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this portfolio. Computed in PublishService.
+      required:
+      - workspaces
+      type: object
+      additionalProperties: false
     GeneralErrorResponse:
       properties:
         message:
@@ -278,12 +284,6 @@ components:
       type: object
       additionalProperties:
         $ref: '#/components/schemas/Terminology'
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
   securitySchemes:
     api_key:
       type: apiKey

@@ -398,33 +398,117 @@ components:
       type:
       - array
       - 'null'
-    PaginationMetadata:
+    Person:
       properties:
-        currentPage:
-          type: number
-          format: double
-        perPage:
-          type: number
-          format: double
-        totalPages:
-          type: number
-          format: double
-        totalRecords:
-          type: number
-          format: double
-      required:
-      - currentPage
-      - perPage
-      - totalPages
-      - totalRecords
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        email:
+          type: string
       type: object
       additionalProperties: false
-    NullableType_string-Array_:
-      items:
-        type: string
-      type:
-      - array
-      - 'null'
+    PlainIdeaRequest:
+      properties:
+        workspaceId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+          description: 'Email address of the idea author. The backend looks up (or creates) the
+
+            person record from this email and attributes the feedback to them. This
+
+            is NOT a user ID — sending a numeric ID will return 400.'
+          example: user@example.com
+        categoryId:
+          type: string
+        labels:
+          items:
+            type: string
+          type: array
+        importanceId:
+          type: string
+          description: 'Portal importance — numeric ID OR exact name (case-insensitive). When
+
+            omitted, the portal''s `isDefault: true` importance is used (see
+
+            `GET /feedback_portal/{portalId}/importances`).'
+          example: Critical
+      required:
+      - title
+      type: object
+      additionalProperties: false
+    Entity:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+      type: object
+      additionalProperties: false
+    CustomFieldValue:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          $ref: '#/components/schemas/NullableType_string_'
+        values:
+          $ref: '#/components/schemas/NullableType_string-Array_'
+        label:
+          type: string
+      required:
+      - id
+      type: object
+      additionalProperties: false
+    FeedbackItem:
+      $ref: '#/components/schemas/BaseFeedbackItem'
+    LinkedItem:
+      properties:
+        id:
+          type: string
+        shortId:
+          type: string
+        title:
+          type: string
+        webUrl:
+          type: string
+          description: Direct link to the linked work item in the Craft.io app.
+      type: object
+      additionalProperties: false
+    Category:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
+    FeedbackItemsPaginated_FeedbackItem_:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeedbackItem'
+          type: array
+        metadata:
+          $ref: '#/components/schemas/PaginationMetadata'
+      required:
+      - items
+      - metadata
+      type: object
+      additionalProperties: false
     BaseFeedbackItem:
       properties:
         id:
@@ -469,121 +553,45 @@ components:
       - id
       type: object
       additionalProperties: false
-    PlainIdeaRequest:
+    PaginationMetadata:
       properties:
-        workspaceId:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        owner:
-          type: string
-          description: 'Email address of the idea author. The backend looks up (or creates) the
-
-            person record from this email and attributes the feedback to them. This
-
-            is NOT a user ID — sending a numeric ID will return 400.'
-          example: user@example.com
-        categoryId:
-          type: string
-        labels:
-          items:
-            type: string
-          type: array
-        importanceId:
-          type: string
-          description: 'Portal importance — numeric ID OR exact name (case-insensitive). When
-
-            omitted, the portal''s `isDefault: true` importance is used (see
-
-            `GET /feedback_portal/{portalId}/importances`).'
-          example: Critical
+        currentPage:
+          type: number
+          format: double
+        perPage:
+          type: number
+          format: double
+        totalPages:
+          type: number
+          format: double
+        totalRecords:
+          type: number
+          format: double
       required:
-      - title
-      type: object
-      additionalProperties: false
-    Person:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        email:
-          type: string
+      - currentPage
+      - perPage
+      - totalPages
+      - totalRecords
       type: object
       additionalProperties: false
     NullableType_string_:
       type:
       - string
       - 'null'
-    CustomFieldValue:
+    GeneralErrorResponse:
       properties:
-        id:
-          type: string
-        name:
-          type: string
-        value:
-          $ref: '#/components/schemas/NullableType_string_'
-        values:
-          $ref: '#/components/schemas/NullableType_string-Array_'
-        label:
+        message:
           type: string
       required:
-      - id
+      - message
       type: object
       additionalProperties: false
-    Entity:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-      type: object
-      additionalProperties: false
-    Category:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
-      type: object
-      additionalProperties: false
-    FeedbackItemsPaginated_FeedbackItem_:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/FeedbackItem'
-          type: array
-        metadata:
-          $ref: '#/components/schemas/PaginationMetadata'
-      required:
-      - items
-      - metadata
-      type: object
-      additionalProperties: false
-    FeedbackItem:
-      $ref: '#/components/schemas/BaseFeedbackItem'
-    LinkedItem:
-      properties:
-        id:
-          type: string
-        shortId:
-          type: string
-        title:
-          type: string
-        webUrl:
-          type: string
-          description: Direct link to the linked work item in the Craft.io app.
-      type: object
-      additionalProperties: false
+    NullableType_string-Array_:
+      items:
+        type: string
+      type:
+      - array
+      - 'null'
     IdeaRequest:
       properties:
         workspaceId:
@@ -620,14 +628,6 @@ components:
           type: array
       required:
       - title
-      type: object
-      additionalProperties: false
-    GeneralErrorResponse:
-      properties:
-        message:
-          type: string
-      required:
-      - message
       type: object
       additionalProperties: false
   securitySchemes:

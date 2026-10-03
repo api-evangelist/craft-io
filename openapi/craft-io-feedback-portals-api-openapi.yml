@@ -385,6 +385,55 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
+    FeedbackPortal:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        url:
+          type: string
+        workspaces:
+          items:
+            $ref: '#/components/schemas/Workspace'
+          type: array
+        webUrl:
+          type: string
+          description: Fully-qualified portal URL (https://{slug}.{FPURL}). Convenience over `url`.
+      type: object
+      additionalProperties: false
+    CustomField:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        values:
+          items:
+            type: string
+          type: array
+        options:
+          items:
+            $ref: '#/components/schemas/CustomFieldOption'
+          type: array
+        optionShape:
+          $ref: '#/components/schemas/OptionShape'
+      required:
+      - id
+      - name
+      - type
+      type: object
+      additionalProperties: false
     FormCustomField:
       properties:
         id:
@@ -412,25 +461,6 @@ components:
       - required
       type: object
       additionalProperties: false
-    FeedbackPortal:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        url:
-          type: string
-        workspaces:
-          items:
-            $ref: '#/components/schemas/Workspace'
-          type: array
-        webUrl:
-          type: string
-          description: Fully-qualified portal URL (https://{slug}.{FPURL}). Convenience over `url`.
-      type: object
-      additionalProperties: false
     Entity:
       properties:
         id:
@@ -456,25 +486,6 @@ components:
           description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
       type: object
       additionalProperties: false
-    CustomFieldOption:
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        startDate:
-          type:
-          - string
-          - 'null'
-        endDate:
-          type:
-          - string
-          - 'null'
-      required:
-      - id
-      - label
-      type: object
-      additionalProperties: false
     PortalImportance:
       properties:
         id:
@@ -489,28 +500,12 @@ components:
       - name
       type: object
       additionalProperties: false
-    CustomField:
+    GeneralErrorResponse:
       properties:
-        id:
+        message:
           type: string
-        name:
-          type: string
-        type:
-          type: string
-        values:
-          items:
-            type: string
-          type: array
-        options:
-          items:
-            $ref: '#/components/schemas/CustomFieldOption'
-          type: array
-        optionShape:
-          $ref: '#/components/schemas/OptionShape'
       required:
-      - id
-      - name
-      - type
+      - message
       type: object
       additionalProperties: false
     PortalForm:
@@ -534,20 +529,25 @@ components:
       - fields
       type: object
       additionalProperties: false
-    GeneralErrorResponse:
+    CustomFieldOption:
       properties:
-        message:
+        id:
           type: string
+        label:
+          type: string
+        startDate:
+          type:
+          - string
+          - 'null'
+        endDate:
+          type:
+          - string
+          - 'null'
       required:
-      - message
+      - id
+      - label
       type: object
       additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
   securitySchemes:
     api_key:
       type: apiKey
