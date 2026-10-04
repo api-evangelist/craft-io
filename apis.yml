@@ -200,6 +200,9 @@ apis:
   - type: OpenAPI
     url: openapi/craft-io-workspaces-api-openapi.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/craft-io-capability-edges.yml
+    name: Craft.io Business Capability Map
   - type: AgenticAccess
     url: agentic-access/craft-io-agentic-access.yml
   - type: DomainSecurity

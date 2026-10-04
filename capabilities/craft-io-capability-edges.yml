@@ -1,0 +1,38 @@
+slug: craft-io
+provider: Craft.io
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Feedback items
+  spec_file: craft-io-feedback-items-api-openapi.yml
+  capability_id: BC-4200.10
+  capability_id_l1: BC-4200
+  capability_name: Product Discovery & Backlog Management
+  confidence: 0.75
+  evidence: GET /feedback_portal/{portalId}/feedback_items GetIdeas "Get ideas"; POST /feedback_portal/{portalId}/feedback
+    PostIdea "Post idea"; schemas FeedbackItem, LinkedItem
+  reason: Ideas submitted and retrieved from customer feedback portals, linkable to work items — this
+    is the market/customer-signal ideation and validation input to the product backlog in a product-management
+    platform. Some ambiguity against voice-of-customer / customer-insight capabilities keeps confidence
+    below 0.8.
+- tag: Work Items and OKRs
+  spec_file: craft-io-work-items-and-okrs-api-openapi.yml
+  capability_id: BC-4200.10
+  capability_id_l1: BC-4200
+  capability_name: Product Discovery & Backlog Management
+  confidence: 0.75
+  evidence: GET /workspace/{workspaceId}/items GetItems; POST /item CreateItem; "initiatives, products,
+    epics, features, and stories"; Omit_Item...sprint-or-quarter-or-assignee-or-storyPoints-or-objective-or-keyResult...
+  reason: CRUD over epics/features/stories with sprints, story points, personas and linked feedback is
+    product backlog stewardship. The OKR fields (objective, keyResult) hint at strategy-execution too,
+    but the dominant surface is backlog item management, so the L2 is asserted at moderate-high confidence.
