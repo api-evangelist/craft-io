@@ -44,14 +44,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    GeneralErrorResponse:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: false
     ApiKeyIntrospection:
       description: 'Introspection endpoints for "what is the current API key allowed to do".
 
@@ -102,6 +94,14 @@ components:
       - scopes
       - resourceScope
       - mcpAccess
+      type: object
+      additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+      - message
       type: object
       additionalProperties: false
   securitySchemes:
