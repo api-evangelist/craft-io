@@ -172,33 +172,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CustomFieldOption:
-      properties:
-        id:
-          type: string
-        label:
-          type: string
-        startDate:
-          type:
-          - string
-          - 'null'
-        endDate:
-          type:
-          - string
-          - 'null'
-      required:
-      - id
-      - label
-      type: object
-      additionalProperties: false
-    GeneralErrorResponse:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: false
     Portfolio:
       properties:
         id:
@@ -233,6 +206,20 @@ components:
           description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
       type: object
       additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: false
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
     CustomField:
       properties:
         id:
@@ -257,12 +244,30 @@ components:
       - type
       type: object
       additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
+    CustomFieldOption:
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        startDate:
+          type:
+          - string
+          - 'null'
+        endDate:
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      - label
+      type: object
+      additionalProperties: false
+    TerminologyList_Terminology_:
+      properties: {}
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Terminology'
     Terminology:
       properties:
         category:
@@ -279,11 +284,6 @@ components:
       - customSingle
       type: object
       additionalProperties: false
-    TerminologyList_Terminology_:
-      properties: {}
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/Terminology'
   securitySchemes:
     api_key:
       type: apiKey
