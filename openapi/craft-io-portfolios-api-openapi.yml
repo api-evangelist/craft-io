@@ -1,12 +1,20 @@
 openapi: 3.2.0
 info:
-  title: Craft.io Portfolio Portfolios API
-  description: REST API providing access to portfolio data including portfolio items, portfolio custom fields, and terminology for enterprise product portfolio management.
+  title: Craft.io Public Portfolios API
   version: 1.0.0
-  contact:
-    name: Craft.io Support
-    url: https://help.craft.io/
-    email: support@craft.io
+  description: 'Our platform provides a set of comprehensive public APIs that allows users and applications to access and retrieve data about working items within our system.
+
+
+    With our API, users can easily integrate item information into their own applications, such as dashboards or organizational tools for customer service, sales, and marketing.
+
+
+    Our API supports a variety of data formats and retrieval methods, making it easy to customize and integrate with your existing systems. Whether you''re looking to build custom reports, track inventory, or monitor sales trends, our API provides the flexibility and scalability you need to get the job done.
+
+
+    For getting an API key just approach our support team at support@craft.io or on the app chat (‘contact support’).'
+  license:
+    name: Terms and conditions
+    url: https://craft.io/terms-and-conditions/
 servers:
 - url: /
 tags:
@@ -120,6 +128,12 @@ paths:
         required: true
         schema:
           type: string
+      - in: query
+        name: includeOptions
+        required: false
+        schema:
+          default: false
+          type: boolean
       summary: Get portfolio custom fields
       x-summary-source: derived
   /portfolio/{portfolioId}/terminology:
@@ -170,8 +184,132 @@ paths:
           type: string
       summary: Get portfolio terminology
       x-summary-source: derived
+  /portfolio/{portfolioId}/statuses:
+    get:
+      operationId: GetPortfolioStatuses
+      responses:
+        '200':
+          description: A list of the portfolio’s statuses
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ItemStatus'
+                type: array
+        '400':
+          description: Invalid portfolio ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to portfolio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: Portfolio not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching statuses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the portfolio’s full native status list (“Workflow & statuses”)
+      tags:
+      - Portfolios
+      security:
+      - api_key:
+        - read:portfolios:craft
+      parameters:
+      - in: path
+        name: portfolioId
+        required: true
+        schema:
+          type: string
+      summary: Get portfolio statuses
+      x-summary-source: derived
 components:
   schemas:
+    Terminology:
+      properties:
+        category:
+          type: string
+        default:
+          type: string
+        customSingle:
+          type: string
+        customPlural:
+          type: string
+      required:
+      - category
+      - default
+      - customSingle
+      type: object
+      additionalProperties: false
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
+    CustomField:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        capacityEnabled:
+          type: boolean
+          description: 'NUMBER fields only: true when the container plans capacity against this
+
+            field. A capacity field (FE, BE) is otherwise indistinguishable from any
+
+            other number (Reach, ACV) here. Read the limits with /capacity.'
+        categoryId:
+          type:
+          - string
+          - 'null'
+        categoryName:
+          type:
+          - string
+          - 'null'
+        values:
+          items:
+            type: string
+          type: array
+        options:
+          items:
+            $ref: '#/components/schemas/CustomFieldOption'
+          type: array
+        optionShape:
+          $ref: '#/components/schemas/OptionShape'
+        multi:
+          type: boolean
+        source:
+          type: string
+          enum:
+          - portal
+          - workspace
+      required:
+      - id
+      - name
+      - type
+      type: object
+      additionalProperties: false
     Portfolio:
       properties:
         id:
@@ -191,57 +329,83 @@ components:
       - workspaces
       type: object
       additionalProperties: false
-    Workspace:
+    ItemStatus:
       properties:
         id:
           type: string
         name:
+          type: string
+        phase:
+          $ref: '#/components/schemas/StatusPhase'
+          description: Workflow bucket the UI groups the status under. Absent if unmapped.
+        color:
           type:
           - string
           - 'null'
-        key:
-          type: string
-        webUrl:
-          type: string
-          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+          description: Swatch shown in the UI, e.g. `#586CF5`.
+      required:
+      - id
+      - name
       type: object
       additionalProperties: false
+    StatusPhase:
+      type: string
+      enum:
+      - open
+      - in_progress
+      - done
+      - released
+      description: Workflow bucket a status belongs to, mirroring the core's GlobalStatus states.
     GeneralErrorResponse:
       properties:
         message:
           type: string
+        error:
+          type: string
+          description: 'Stable machine code, present on the responses that carry one — the widget''s 401/403/404 and the
+
+            attachment 413. Optional because most errors here only have a message, but it has to be part of
+
+            the schema: tsoa emits `additionalProperties: false`, so an undeclared key makes every coded
+
+            response violate the shape its own spec tells a caller to parse.
+
+
+            OPTIONAL RATHER THAN A SEPARATE CODED-ERROR SCHEMA, and not for brevity: on the routes that
+
+            carry codes, the same status can arrive with and without one. A widget-config 404 is
+
+            `widget_unknown` when the widget id misses and a bare `Feedback portal not found` when the
+
+            portal id does; a widget-config 401 is `token_invalid` for a bad token and a bare
+
+            `Forbidden, there is no auth token` when the header is absent. A variant with `error` required
+
+            would be declared on exactly those routes and would be wrong half the time they fail.
+
+
+            Branch on it when it is there and fall back to the status when it is not. The vocabulary:
+
+            401 `token_expired` (fetch a new token and retry once) | `token_invalid` | `dev_key_invalid` |
+
+            `dev_origin_rejected`;
+
+            403 `widget_not_enabled` | `insufficient_scope` | `mcp_disabled_by_account` | `no_paid_seat`;
+
+            404 `widget_unknown` | `widget_deleted` | `widget_inactive` | `widget_no_categories`;
+
+            413 `file_too_large`.
+
+            The widget half of that list is the contract in docs/CRA-24100-widget-token-endpoint.md and is
+
+            pinned by widgetFailureTaxonomy.test.ts — change the three together.
+
+
+            Left as a free string rather than an enum on purpose — a closed set turns every new code into
+
+            a breaking change for a generated client, and new codes are the whole point of the field.'
       required:
       - message
-      type: object
-      additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
-    CustomField:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        values:
-          items:
-            type: string
-          type: array
-        options:
-          items:
-            $ref: '#/components/schemas/CustomFieldOption'
-          type: array
-        optionShape:
-          $ref: '#/components/schemas/OptionShape'
-      required:
-      - id
-      - name
-      - type
       type: object
       additionalProperties: false
     CustomFieldOption:
@@ -263,29 +427,36 @@ components:
       - label
       type: object
       additionalProperties: false
+    Workspace:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+      type: object
+      additionalProperties: false
     TerminologyList_Terminology_:
       properties: {}
       type: object
       additionalProperties:
         $ref: '#/components/schemas/Terminology'
-    Terminology:
-      properties:
-        category:
-          type: string
-        default:
-          type: string
-        customSingle:
-          type: string
-        customPlural:
-          type: string
-      required:
-      - category
-      - default
-      - customSingle
-      type: object
-      additionalProperties: false
   securitySchemes:
     api_key:
       type: apiKey
       in: header
       name: x-api-key
+    portal_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A short-lived token signed by the customer's own server with their feedback portal's widget secret, carrying the identity of whoever is submitting. Accepted only on the two feedback-creation routes, in place of x-api-key. Used by the portal's embedded feedback widget; the customer's own integration uses x-api-key instead.
+externalDocs:
+  description: Help center
+  url: https://help.craft.io/en/

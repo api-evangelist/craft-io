@@ -1,12 +1,20 @@
 openapi: 3.2.0
 info:
-  title: Craft.io Feedback Portal Feedback Portals API
-  description: REST API for managing customer feedback portals, including listing portals and categories, retrieving feedback items, and submitting new feedback via POST requests.
+  title: Craft.io Public Feedback Portals API
   version: 1.0.0
-  contact:
-    name: Craft.io Support
-    url: https://help.craft.io/
-    email: support@craft.io
+  description: 'Our platform provides a set of comprehensive public APIs that allows users and applications to access and retrieve data about working items within our system.
+
+
+    With our API, users can easily integrate item information into their own applications, such as dashboards or organizational tools for customer service, sales, and marketing.
+
+
+    Our API supports a variety of data formats and retrieval methods, making it easy to customize and integrate with your existing systems. Whether you''re looking to build custom reports, track inventory, or monitor sales trends, our API provides the flexibility and scalability you need to get the job done.
+
+
+    For getting an API key just approach our support team at support@craft.io or on the app chat (‘contact support’).'
+  license:
+    name: Terms and conditions
+    url: https://craft.io/terms-and-conditions/
 servers:
 - url: /
 tags:
@@ -34,12 +42,6 @@ paths:
                   - id: '2305843010022720322'
                     name: Secret portal
                     url: secretportal
-        '400':
-          description: Invalid account ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -52,6 +54,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid account ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while fetching feedback portals
           content:
@@ -145,12 +153,6 @@ paths:
                     name: General
                   - id: '2305843010222720322'
                     name: My favorite category
-        '400':
-          description: Invalid portal ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -163,6 +165,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while fetching categories in a feedback portal
           content:
@@ -210,12 +218,6 @@ paths:
                   - id: '2305843010122720556'
                     name: Nice to Have
                     isDefault: true
-        '400':
-          description: Invalid portal ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -228,6 +230,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while fetching importances in a feedback portal
           content:
@@ -260,12 +268,6 @@ paths:
                 items:
                   $ref: '#/components/schemas/CustomField'
                 type: array
-        '400':
-          description: Invalid portal ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -278,6 +280,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while fetching custom fields in a feedback portal
           content:
@@ -303,6 +311,250 @@ paths:
           default: false
           type: boolean
       summary: Get custom fields
+      x-summary-source: derived
+  /feedback_portal/{portalId}/widget/{widgetId}/config:
+    get:
+      operationId: GetWidgetConfig
+      responses:
+        '200':
+          description: The widget's form definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WidgetConfig'
+        '401':
+          description: 'Missing, expired or invalid credential — carries `error`: `token_expired` (fetch a new token and retry) | `token_invalid` | `dev_key_invalid`, except when the Authorization header is absent entirely'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: 'Access denied, or this portal is not set up for widgets — carries `error: "widget_not_enabled"` on the latter'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: 'No such widget on this portal, or it is inactive — carries `error`: `widget_unknown` | `widget_deleted` | `widget_inactive` | `widget_no_categories`, except when the PORTAL is what was not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid portal or widget ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+        '503':
+          description: 'The widget or category read failed — RETRY THIS. Carries `Retry-After` and `code: "retryable"`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetryableErrorResponse'
+      description: 'Everything the portal''s embedded feedback widget needs to render its form, in one read.
+
+
+        **Called when the form opens, not when the page loads.** The widget fetches its signed token
+
+        from your own server at that moment and uses it here, which is why an hour-long token is
+
+        comfortable: the window only has to cover somebody writing, not their whole visit.
+
+
+        **The fields come from the portal every time.** A PM adding a required field appears in the
+
+        widget on the next page load with nobody editing your site — which is the point of embedding
+
+        the portal''s own form rather than a copy of it. Each field carries `required`, so the widget can
+
+        catch a missing one before posting instead of by a rejection.
+
+
+        **Read this when the widget OPENS, not when the page loads.** Everything here is a setting an
+
+        administrator can change at any moment, so the response is `Cache-Control: no-store` and a copy
+
+        held across a long-lived page goes out of date. Nothing can make this read and the submission
+
+        that follows one transaction, which is why a stale `importanceId` is forgiven on submit rather
+
+        than refused — but the fresher this read, the less often a submitter is shown an option that
+
+        has since gone.
+
+
+        **One list, already in order.** A form''s built-in fields — its description box — are the
+
+        portal''s to show, hide, reorder and mark required, exactly like a field somebody created, so a
+
+        page that hardcodes them drifts the moment an administrator changes their mind. Both kinds
+
+        arrive merged in `fields`, sorted the way the form editor arranges them — the description box
+
+        can sit between two created fields, and it will here too. Draw the array top to bottom.
+
+
+        Each entry carries `kind`, which is also where its value goes on submit: a `custom` field''s
+
+        belongs in `customFields` under its id, a `system` field''s is the request property its `id`
+
+        names.
+
+
+        **The categories are the widget''s, narrowed here.** A widget offers a chosen set; that
+
+        narrowing is applied server-side, so what comes back is exactly what the form may show. Every
+
+        offered category is covered by exactly one form: a category with no form of its own gets the
+
+        portal''s default form, which is the same form the submission will be validated against.
+
+
+        **`widget.hideImportance` means leave the row out, not disable it.** Draw no importance control
+
+        at all, and post `widget.defaultImportanceId` as the `importanceId` — that is the answer the
+
+        administrator gave in place of the submitter''s, which is the point of hiding the question rather
+
+        than a detail of it. A null there means nobody picked one: post no `importanceId` and the
+
+        portal''s default applies.
+
+
+        **`defaultImportanceId` is already resolved.** An administrator deleting the importance a widget
+
+        named does not break it and does not rewrite it: the fallback to the first of `importances` is
+
+        worked out on every read and nothing is written back, so restoring the importance restores the
+
+        choice.
+
+
+        **So do the words.** `terminology` carries the portal''s own names for feedback and for a
+
+        company — `{ default, customSingle, customPlural }` for each, always both keys, defaults filled
+
+        in when nobody has renamed anything. A portal that calls feedback a "Request" gets a form that
+
+        says Request, for the same reason it gets the portal''s fields: a copy of the form hardcodes the
+
+        word and keeps saying it after a PM changes it.
+
+
+        **No cookie is set and no Craft session exists** — on this call or on the submission that
+
+        follows it. That is a property of the feature rather than an implementation detail: nothing
+
+        about the person browsing your site is stored in their browser by Craft.'
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: widgetId
+        required: true
+        schema:
+          type: string
+      summary: Get widget config
+      x-summary-source: derived
+  /feedback_portal/{portalId}/widget/{widgetId}/events:
+    post:
+      operationId: PostWidgetEvent
+      responses:
+        '202':
+          description: Received — no body, and nothing to retry
+        '401':
+          description: Missing, expired or invalid credential
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied, or this portal is not set up for widgets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Unknown eventName, an unlisted property, or an id that disagrees with the path
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+        '429':
+          description: The portal's widget rate limit — carries `Retry-After`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitErrorResponse'
+      description: 'Tell Craft that the widget was opened, or submitted, on your page.
+
+
+        **Fire and forget.** `202` with no body, and the body means nothing beyond "received". Do not
+
+        retry it, do not wait for it before showing your form, and never let it fail a submission — a
+
+        relay that breaks the thing it measures is worse than no measurement.
+
+
+        **What to send.** `eventName` is `beWidgetOpened` (the form was shown to somebody) or
+
+        `beWidgetSubmitted`. Everything else is optional context about the page:
+
+
+        ```json
+
+        { "eventName": "beWidgetOpened", "widgetVersion": "v1",
+
+        "browser": "", "mobile": false, "categoriesSize": 3 }
+
+        ```
+
+
+        `portalId` and `widgetId` may also be sent and must then match the path, which is what counts.
+
+
+        **Nothing about the person reaches Craft through this endpoint** — no page URL, nothing typed
+
+        into the form, no identity. An unlisted property is a `422` rather than a silent drop, so a typo
+
+        is something you see on your first attempt instead of a series that never arrives.
+
+
+        Takes the same three credentials as the config read: a widget token, a development key, or an
+
+        account API key.'
+      tags:
+      - Feedback Portals
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: widgetId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WidgetEventRequest'
+      summary: Post widget event
       x-summary-source: derived
   /feedback_portal/{portalId}/forms:
     get:
@@ -333,12 +585,6 @@ paths:
                 - forms
                 - metadata
                 type: object
-        '400':
-          description: Invalid portal ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -351,6 +597,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while fetching forms in a feedback portal
           content:
@@ -385,33 +637,89 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PortalForm:
+    OptionShape:
+      type: string
+      enum:
+      - select
+      - date
+      - date_range
+    WidgetForm:
+      description: 'ONE FIELD LIST, ALREADY IN RENDER ORDER — a form as the widget draws it.
+
+
+        The portal keeps two lists: the fields somebody created and the ones Craft builds in. Its form
+
+        editor arranges them as one, so the description box can sit between two created fields — and the
+
+        two are merged and sorted here so a page can loop over `fields` once, top to bottom, and be done.'
       properties:
         id:
           type: string
         name:
           type: string
+        isDefault:
+          type: boolean
+          description: True for the portal's default form — what a category with no form of its own is given.
         categories:
           items:
             $ref: '#/components/schemas/Entity'
           type: array
         fields:
           items:
-            $ref: '#/components/schemas/FormCustomField'
+            $ref: '#/components/schemas/WidgetFormField'
           type: array
       required:
       - id
       - name
+      - isDefault
       - categories
       - fields
       type: object
       additionalProperties: false
-    GeneralErrorResponse:
+    RetryableErrorResponse:
+      description: 'The 503 body — NOT `GeneralErrorResponse`, which it would violate.
+
+
+        `code` and `retryAfter` are contract terms (see `ServiceUnavailableError`), and the shared error
+
+        schema is `additionalProperties: false`, so a route declaring `GeneralErrorResponse` for its 503
+
+        documents a shape this service has never sent. Same defect CRA-24377 reported against the
+
+        widget 404, one status along.
+
+
+        `code` rather than `error` because that is what the handler has always emitted here and callers
+
+        branch on it; renaming it to match the 4xx family would be the breaking change.'
       properties:
         message:
           type: string
+        code:
+          type: string
+          description: Always `retryable`. What distinguishes a transient failure from the permanent 4xx ones.
+        retryAfter:
+          type: number
+          format: double
+          description: Seconds. Mirrors the `Retry-After` header.
       required:
       - message
+      - code
+      - retryAfter
+      type: object
+      additionalProperties: false
+    PortalImportance:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isDefault:
+          type: boolean
+          description: True when this importance is the portal's default — used by create_feedback when `importanceId` is omitted.
+      required:
+      - id
+      - name
       type: object
       additionalProperties: false
     FeedbackPortal:
@@ -433,51 +741,6 @@ components:
           description: Fully-qualified portal URL (https://{slug}.{FPURL}). Convenience over `url`.
       type: object
       additionalProperties: false
-    Workspace:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        key:
-          type: string
-        webUrl:
-          type: string
-          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
-      type: object
-      additionalProperties: false
-    OptionShape:
-      type: string
-      enum:
-      - select
-      - date
-      - date_range
-    CustomField:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        type:
-          type: string
-        values:
-          items:
-            type: string
-          type: array
-        options:
-          items:
-            $ref: '#/components/schemas/CustomFieldOption'
-          type: array
-        optionShape:
-          $ref: '#/components/schemas/OptionShape'
-      required:
-      - id
-      - name
-      - type
-      type: object
-      additionalProperties: false
     Entity:
       properties:
         id:
@@ -486,6 +749,241 @@ components:
           type:
           - string
           - 'null'
+      type: object
+      additionalProperties: false
+    WidgetFormField:
+      description: 'One row of a form, of either kind.
+
+
+        **`kind` decides where the value goes on submit**, which is why it is here rather than left to
+
+        the caller to infer from the shape of `id`. A `custom` field''s value belongs in `customFields`
+
+        keyed by this `id`, a bigint the portal assigned. A `system` field''s `id` is a name — Craft''s own
+
+        key for a built-in part of the form, `description` being the only one the product writes today —
+
+        and its value is the request property of that name.
+
+
+        **`required` is a rendering instruction on a `system` field.** Nothing in Craft rejects a
+
+        submission over it, so ignoring it does not fail; it just draws a form the portal''s own no longer
+
+        matches. On a `custom` field it is enforced.
+
+
+        The descriptive keys (`name`, `type`, `options`, …) belong to created fields and are absent on a
+
+        built-in one, which Craft holds no label or type for — the page knows how to draw its own
+
+        description box.'
+      properties:
+        kind:
+          type: string
+          enum:
+          - custom
+          - system
+        id:
+          type: string
+        required:
+          type: boolean
+        orderIndex:
+          type: number
+          format: double
+          description: 'The administrator''s position for this field, both kinds on one scale — the array is already
+
+            sorted by it, so this is here to be read rather than acted on. Not dense and not necessarily
+
+            positive: a form nobody has re-saved since the editor gained drag ordering carries positions
+
+            the monolith''s counter allocated.'
+        name:
+          type: string
+        description:
+          type: string
+          description: 'The help line drawn under the label, as the portal''s own form draws it. Plain text — render it
+
+            as text, never as HTML. Absent when the field has none.'
+        type:
+          type: string
+        options:
+          items:
+            $ref: '#/components/schemas/CustomFieldOption'
+          type: array
+        optionShape:
+          $ref: '#/components/schemas/OptionShape'
+        multi:
+          type: boolean
+          description: 'SELECT fields only: send `values: [...]` when true, a scalar `value` when false.'
+      required:
+      - kind
+      - id
+      - required
+      - orderIndex
+      type: object
+      additionalProperties: false
+    WidgetConfig:
+      description: 'Everything the embedded feedback widget needs to render its form, in one read.
+
+
+        ONE CALL AT FORM-OPEN, and the narrowing is server-side. A widget offers a chosen set of
+
+        categories, and applying that here rather than in the page is what stops a widget configured for
+
+        one category being made to render another — the browser is not a place to enforce it.'
+      properties:
+        widget:
+          properties:
+            defaultImportanceId:
+              type:
+              - string
+              - 'null'
+              description: 'The importance to submit while `hideImportance` is true — what the administrator chose
+
+                instead of asking.
+
+
+                **Already resolved.** If the importance it named has since been deleted from the portal, this
+
+                is the first of `importances` rather than a dangling id, so the value is always one you can
+
+                post. Nothing is written back: the widget''s stored configuration is untouched and the fallback
+
+                is worked out on every read, so restoring the importance restores the choice.
+
+
+                **Null means nothing was picked**, which is an ordinary state and not an error. Submit with no
+
+                `importanceId` and the portal''s default applies.
+
+
+                Present regardless of `hideImportance` — a widget that shows the field keeps its stored value,
+
+                so an administrator toggling the question off and on again does not lose it. **When the field
+
+                is shown, this is not the value to send**: send what the submitter chose.'
+            hideImportance:
+              type: boolean
+              description: 'True when this widget''s form should not ask how important the feedback is — **leave the row
+
+                out entirely rather than showing it disabled.**
+
+
+                Per widget, because the judgement is per placement: a form behind a "Report a bug" button in
+
+                a product header asks somebody mid-task, who leaves whatever is preselected, so the field
+
+                costs a line and returns a value nobody chose.
+
+
+                **Then submit `defaultImportanceId` as the `importanceId`** — that is the administrator''s
+
+                answer in place of the submitter''s. When it is null, submit without an `importanceId` at all
+
+                and the feedback takes the portal''s default importance (its `isDefault` one, or its first
+
+                otherwise).'
+            categories:
+              items:
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: string
+                required:
+                - name
+                - id
+                type: object
+              type: array
+            title:
+              type: string
+              description: The heading submitters read. Not the administrator's internal name, which is never shown.
+            id:
+              type: string
+          required:
+          - defaultImportanceId
+          - hideImportance
+          - categories
+          - title
+          - id
+          type: object
+        brand:
+          properties:
+            primaryColor:
+              type:
+              - string
+              - 'null'
+              description: Portal-global, not per widget. Null when the administrator has not chosen one.
+          required:
+          - primaryColor
+          type: object
+        importances:
+          items:
+            $ref: '#/components/schemas/PortalImportance'
+          type: array
+        terminology:
+          $ref: '#/components/schemas/TerminologyList_PortalTerminology_'
+          description: 'The portal''s own words for the two things this form talks about, so the widget can label
+
+            itself the way the portal does.
+
+
+            `feedback` and `company`, always both, each with `default` (what Craft calls it), `customSingle`
+
+            and `customPlural` (what this portal''s administrator calls it). A portal that has renamed
+
+            nothing still returns both, filled in with the defaults — the caller never has to know what
+
+            Craft would have called it.
+
+
+            **This is the drift argument again.** A customer''s hand-built form hardcodes "Submit feedback"
+
+            and keeps saying it after a PM renamed the term to "Request"; the portal''s own form cannot,
+
+            because the word arrives with the definition. Same reason the fields come from here.'
+        forms:
+          items:
+            $ref: '#/components/schemas/WidgetForm'
+          type: array
+          description: 'The portal''s own form definitions, narrowed to the widget''s offered categories — each field
+
+            carrying whether it is required, so the widget can catch a missing one before posting rather
+
+            than by a rejection.
+
+
+            **Look a form up by category id.** Each offered category appears on exactly one form, so a
+
+            category is never left without one: where the portal''s administrator has not given a category
+
+            a form of its own, the portal''s default form (`isDefault`) covers it — and that is the same
+
+            form the submission is checked against, so a required field here is a required field there.
+
+            The one exception is a portal with no default form and no form for the category, which has no
+
+            fields to render and none to enforce.'
+      required:
+      - widget
+      - brand
+      - importances
+      - terminology
+      - forms
+      type: object
+      additionalProperties: false
+    ValidateErrorJSON:
+      properties:
+        message:
+          type: string
+        details:
+          properties: {}
+          additionalProperties: {}
+          type: object
+      required:
+      - message
+      - details
       type: object
       additionalProperties: false
     CustomFieldOption:
@@ -507,21 +1005,27 @@ components:
       - label
       type: object
       additionalProperties: false
-    PortalImportance:
+    TerminologyList_PortalTerminology_:
+      properties: {}
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/PortalTerminology'
+    Workspace:
       properties:
         id:
           type: string
         name:
+          type:
+          - string
+          - 'null'
+        key:
           type: string
-        isDefault:
-          type: boolean
-          description: True when this importance is the portal's default — used by create_feedback when `importanceId` is omitted.
-      required:
-      - id
-      - name
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
       type: object
       additionalProperties: false
-    FormCustomField:
+    CustomField:
       properties:
         id:
           type: string
@@ -529,6 +1033,21 @@ components:
           type: string
         type:
           type: string
+        capacityEnabled:
+          type: boolean
+          description: 'NUMBER fields only: true when the container plans capacity against this
+
+            field. A capacity field (FE, BE) is otherwise indistinguishable from any
+
+            other number (Reach, ACV) here. Read the limits with /capacity.'
+        categoryId:
+          type:
+          - string
+          - 'null'
+        categoryName:
+          type:
+          - string
+          - 'null'
         values:
           items:
             type: string
@@ -539,13 +1058,283 @@ components:
           type: array
         optionShape:
           $ref: '#/components/schemas/OptionShape'
+        multi:
+          type: boolean
+        source:
+          type: string
+          enum:
+          - portal
+          - workspace
+      required:
+      - id
+      - name
+      - type
+      type: object
+      additionalProperties: false
+    WidgetEventRequest:
+      description: 'One thing the embedded widget did on a customer''s page, for Craft to emit as a BI event.
+
+
+        **Fire and forget.** The response is `202` with no body and carries no meaning beyond "received";
+
+        ignore it, do not retry it, and never let it delay or fail a submission. Nothing here changes
+
+        anything a person can see.
+
+
+        **What Craft never receives through this endpoint**: the page''s URL, anything the submitter typed,
+
+        their identity, and any property not listed below — an unlisted key is a `422`, so a typo is
+
+        something you find on your first attempt rather than a series that silently never arrives.
+
+        (`sourceUrl` on the create routes is how page context reaches a *submission*; this is not it.)'
+      properties:
+        eventName:
+          type: string
+          description: 'What happened. **`beWidgetOpened`** — the form was shown to somebody. **`beWidgetSubmitted`** —
+
+            they submitted it. Anything else is a `422` listing the two.'
+        portalId:
+          type: string
+          description: Optional, and must match the portal in the path when sent. The path is what counts.
+        widgetId:
+          type: string
+          description: Optional, and must match the widget in the path when sent.
+        widgetVersion:
+          type: string
+          description: The widget bundle's own version, e.g. `v1`.
+        browser:
+          type: string
+          description: The browser's user-agent string, up to 256 characters.
+        mobile:
+          type: boolean
+          description: Whether it was drawn on a phone-sized screen.
+        categoriesSize:
+          type: number
+          format: double
+          description: How many categories this widget offered on this open.
+      required:
+      - eventName
+      type: object
+      additionalProperties: false
+    PortalForm:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        isDefault:
+          type: boolean
+          description: 'True for the portal''s default form — the fields the UI shows for new feedback in a category
+
+            that has no form of its own. A portal has at most one.'
+        categories:
+          items:
+            $ref: '#/components/schemas/Entity'
+          type: array
+        fields:
+          items:
+            $ref: '#/components/schemas/FormCustomField'
+          type: array
+          description: In the administrator's own order — see the ORDER BY in getPortalForms.
+      required:
+      - id
+      - name
+      - isDefault
+      - categories
+      - fields
+      type: object
+      additionalProperties: false
+    PortalTerminology:
+      description: 'A renamed portal term.
+
+
+        SHAPED LIKE `Terminology` BUT NOT THE SAME TYPE, and the missing field is the reason. Workspace
+
+        terms carry a `category` because the settings screen groups thirteen of them under four headings;
+
+        a portal has exactly two and the core has no grouping for them. Synthesising one would be a field
+
+        that can never vary and means nothing — worse than its absence, because a caller would key on it.'
+      properties:
+        default:
+          type: string
+          description: The untranslated term — what Craft calls it when nobody has renamed it.
+        customSingle:
+          type: string
+          description: The administrator's word for it, or `default` when they have not chosen one.
+        customPlural:
+          type: string
+          description: Plural of `customSingle`.
+      required:
+      - default
+      - customSingle
+      - customPlural
+      type: object
+      additionalProperties: false
+    RateLimitErrorResponse:
+      description: 'The 429 body. Its own schema for the same reason as `RetryableErrorResponse`: the rate-limit
+
+        handler emits four keys beyond `message`, and `GeneralErrorResponse` forbids all of them.'
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          description: Always `rate_limited`.
+        reason:
+          type: string
+          description: Which bucket denied the request, for propagation to an MCP/agent caller.
+        retryAfter:
+          type: number
+          format: double
+          description: Seconds. Mirrors the `Retry-After` header.
+        limit:
+          type: number
+          format: double
+          description: The bucket's ceiling.
+        window:
+          type: number
+          format: double
+          description: The bucket's window, in seconds.
+      required:
+      - message
+      - code
+      - reason
+      - retryAfter
+      - limit
+      - window
+      type: object
+      additionalProperties: false
+    FormCustomField:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        capacityEnabled:
+          type: boolean
+          description: 'NUMBER fields only: true when the container plans capacity against this
+
+            field. A capacity field (FE, BE) is otherwise indistinguishable from any
+
+            other number (Reach, ACV) here. Read the limits with /capacity.'
+        categoryId:
+          type:
+          - string
+          - 'null'
+        categoryName:
+          type:
+          - string
+          - 'null'
+        values:
+          items:
+            type: string
+          type: array
+        options:
+          items:
+            $ref: '#/components/schemas/CustomFieldOption'
+          type: array
+        optionShape:
+          $ref: '#/components/schemas/OptionShape'
+        multi:
+          type: boolean
+        source:
+          type: string
+          enum:
+          - portal
+          - workspace
         required:
           type: boolean
+        description:
+          type: string
+          description: 'The help line the portal draws under the field''s label — plain text, trimmed. Absent when the
+
+            field has none, blank included: the portal draws nothing for a blank one either.'
+        orderIndex:
+          type: number
+          format: double
+          description: 'Position on the form. ONE SEQUENCE WITH FormSystemField.orderIndex — the form editor sends both
+
+            kinds'' positions in the same save (`PortalForm::fieldsProcessing` and
+
+            `formSystemFieldsProcessing` each store what it sent), so an administrator can put the
+
+            description box between two created fields and the numbers say so.
+
+
+            A SORT KEY, NOT AN ORDINAL: compare two of these, don''t read one on its own. A field added
+
+            without an explicit position takes the monolith''s product-wide allocator
+
+            (`Item::getNexVal` — `-floor(microtime(true) * 1000)`), so a form nobody has re-saved since
+
+            carries large negative values, newest first. Dense 1..n only means the editor has saved a drag
+
+            arrangement for that form. Renumbering them here would move the description box on every widget
+
+            rendering such a form, and would disagree with the portal''s own form, which sorts the raw values.'
       required:
       - id
       - name
       - type
       - required
+      - orderIndex
+      type: object
+      additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+          description: 'Stable machine code, present on the responses that carry one — the widget''s 401/403/404 and the
+
+            attachment 413. Optional because most errors here only have a message, but it has to be part of
+
+            the schema: tsoa emits `additionalProperties: false`, so an undeclared key makes every coded
+
+            response violate the shape its own spec tells a caller to parse.
+
+
+            OPTIONAL RATHER THAN A SEPARATE CODED-ERROR SCHEMA, and not for brevity: on the routes that
+
+            carry codes, the same status can arrive with and without one. A widget-config 404 is
+
+            `widget_unknown` when the widget id misses and a bare `Feedback portal not found` when the
+
+            portal id does; a widget-config 401 is `token_invalid` for a bad token and a bare
+
+            `Forbidden, there is no auth token` when the header is absent. A variant with `error` required
+
+            would be declared on exactly those routes and would be wrong half the time they fail.
+
+
+            Branch on it when it is there and fall back to the status when it is not. The vocabulary:
+
+            401 `token_expired` (fetch a new token and retry once) | `token_invalid` | `dev_key_invalid` |
+
+            `dev_origin_rejected`;
+
+            403 `widget_not_enabled` | `insufficient_scope` | `mcp_disabled_by_account` | `no_paid_seat`;
+
+            404 `widget_unknown` | `widget_deleted` | `widget_inactive` | `widget_no_categories`;
+
+            413 `file_too_large`.
+
+            The widget half of that list is the contract in docs/CRA-24100-widget-token-endpoint.md and is
+
+            pinned by widgetFailureTaxonomy.test.ts — change the three together.
+
+
+            Left as a free string rather than an enum on purpose — a closed set turns every new code into
+
+            a breaking change for a generated client, and new codes are the whole point of the field.'
+      required:
+      - message
       type: object
       additionalProperties: false
   securitySchemes:
@@ -553,3 +1342,11 @@ components:
       type: apiKey
       in: header
       name: x-api-key
+    portal_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A short-lived token signed by the customer's own server with their feedback portal's widget secret, carrying the identity of whoever is submitting. Accepted only on the two feedback-creation routes, in place of x-api-key. Used by the portal's embedded feedback widget; the customer's own integration uses x-api-key instead.
+externalDocs:
+  description: Help center
+  url: https://help.craft.io/en/

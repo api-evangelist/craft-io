@@ -1,0 +1,1295 @@
+openapi: 3.2.0
+info:
+  title: Craft.io Public Views API
+  version: 1.0.0
+  description: 'Our platform provides a set of comprehensive public APIs that allows users and applications to access and retrieve data about working items within our system.
+
+
+    With our API, users can easily integrate item information into their own applications, such as dashboards or organizational tools for customer service, sales, and marketing.
+
+
+    Our API supports a variety of data formats and retrieval methods, making it easy to customize and integrate with your existing systems. Whether you''re looking to build custom reports, track inventory, or monitor sales trends, our API provides the flexibility and scalability you need to get the job done.
+
+
+    For getting an API key just approach our support team at support@craft.io or on the app chat (‘contact support’).'
+  license:
+    name: Terms and conditions
+    url: https://craft.io/terms-and-conditions/
+servers:
+- url: /
+tags:
+- name: Views
+paths:
+  /workspace/{workspaceId}/views:
+    get:
+      operationId: ListWorkspaceViews
+      responses:
+        '200':
+          description: The workspace views
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewListResponse'
+        '400':
+          description: Invalid workspace ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: List the workspace's views and the categories they are organised by.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - read:workspace-meta:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      - description: Only views in this category (exact name, case-insensitive).
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: '`personal` or `workspace`.'
+        in: query
+        name: ownerType
+        required: false
+        schema:
+          type: string
+          enum:
+          - personal
+          - workspace
+      - description: Only views whose name contains this text (case-insensitive).
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: double
+          type: number
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: double
+          type: number
+      summary: List workspace views
+      x-summary-source: derived
+    post:
+      operationId: CreateWorkspaceView
+      responses:
+        '200':
+          description: The created view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewDetail'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+      description: Create a workspace or personal view and return a link that opens it.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - write:items:craft
+        - read:workspace-meta:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewCreateBody'
+      summary: Create workspace view
+      x-summary-source: derived
+  /workspace/{workspaceId}/views/{viewId}:
+    get:
+      operationId: GetWorkspaceView
+      responses:
+        '200':
+          description: The view configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewDetail'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No view found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: A single view's full configuration, by its id.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - read:workspace-meta:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: viewId
+        required: true
+        schema:
+          type: string
+      - description: Also return the stored state verbatim.
+        in: query
+        name: includeRaw
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Include released items in listItemsParams. A view with no status filter hides them, so they are excluded by default to match what the view shows.
+        in: query
+        name: includeCompleted
+        required: false
+        schema:
+          default: false
+          type: boolean
+      summary: Get workspace view
+      x-summary-source: derived
+    patch:
+      operationId: UpdateWorkspaceView
+      responses:
+        '200':
+          description: The updated view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewDetail'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No view found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+      description: Change a view's filters, controllers, name or category.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - write:items:craft
+        - read:workspace-meta:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: viewId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewUpdateBody'
+      summary: Update workspace view
+      x-summary-source: derived
+    delete:
+      operationId: DeleteWorkspaceView
+      responses:
+        '200':
+          description: The view is deleted
+          content:
+            application/json:
+              schema:
+                properties:
+                  viewId:
+                    type: string
+                  deleted:
+                    type: boolean
+                required:
+                - viewId
+                - deleted
+                type: object
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No view found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Delete a view.
+
+
+        The owner/admin rule (a workspace view needs admin rights, a personal view
+
+        only its owner) is enforced by the views service itself, which holds the
+
+        ownerType and personId — checking here as well would cost an extra fetch to
+
+        re-derive what it already knows. Its 403 is relayed verbatim.'
+      tags:
+      - Views
+      security:
+      - api_key:
+        - delete:items:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: viewId
+        required: true
+        schema:
+          type: string
+      summary: Delete workspace view
+      x-summary-source: derived
+  /workspace/{workspaceId}/view:
+    get:
+      operationId: FindWorkspaceView
+      responses:
+        '200':
+          description: The view, or the candidates to choose between
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewLookupResponse'
+        '404':
+          description: No view with that name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Resolve a view by name. Returns the view, or every candidate when the name
+
+        is not unique in the container.'
+      tags:
+      - Views
+      security:
+      - api_key:
+        - read:workspace-meta:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      - description: Exact view name (case-insensitive).
+        in: query
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Narrow to `personal` or `workspace`.
+        in: query
+        name: ownerType
+        required: false
+        schema:
+          type: string
+          enum:
+          - personal
+          - workspace
+      - description: Narrow to a category name.
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: Also return the stored state verbatim.
+        in: query
+        name: includeRaw
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Include released items in listItemsParams. A view with no status filter hides them, so they are excluded by default to match what the view shows.
+        in: query
+        name: includeCompleted
+        required: false
+        schema:
+          default: false
+          type: boolean
+      summary: Find workspace view
+      x-summary-source: derived
+  /portfolio/{portfolioId}/views:
+    get:
+      operationId: ListPortfolioViews
+      responses:
+        '200':
+          description: The portfolio views
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewListResponse'
+        '400':
+          description: Invalid portfolio ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: List the portfolio's views and the categories they are organised by.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - read:portfolios:craft
+      parameters:
+      - in: path
+        name: portfolioId
+        required: true
+        schema:
+          type: string
+      - description: Only views in this category (exact name, case-insensitive).
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: '`personal` or `workspace`.'
+        in: query
+        name: ownerType
+        required: false
+        schema:
+          type: string
+          enum:
+          - personal
+          - workspace
+      - description: Only views whose name contains this text (case-insensitive).
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: double
+          type: number
+      - in: query
+        name: limit
+        required: false
+        schema:
+          default: 50
+          format: double
+          type: number
+      summary: List portfolio views
+      x-summary-source: derived
+    post:
+      operationId: CreatePortfolioView
+      responses:
+        '200':
+          description: The created view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewDetail'
+        '422':
+          description: Invalid view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+      description: Create a portfolio view and return a link that opens it.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - write:portfolios:craft
+        - read:portfolios:craft
+      parameters:
+      - in: path
+        name: portfolioId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewCreateBody'
+      summary: Create portfolio view
+      x-summary-source: derived
+  /portfolio/{portfolioId}/views/{viewId}:
+    get:
+      operationId: GetPortfolioView
+      responses:
+        '200':
+          description: The view configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewDetail'
+        '404':
+          description: No view found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: A single portfolio view's full configuration, by its id.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - read:portfolios:craft
+      parameters:
+      - in: path
+        name: portfolioId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: viewId
+        required: true
+        schema:
+          type: string
+      - description: Also return the stored state verbatim.
+        in: query
+        name: includeRaw
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Include released items in listItemsParams. A view with no status filter hides them, so they are excluded by default to match what the view shows.
+        in: query
+        name: includeCompleted
+        required: false
+        schema:
+          default: false
+          type: boolean
+      summary: Get portfolio view
+      x-summary-source: derived
+    patch:
+      operationId: UpdatePortfolioView
+      responses:
+        '200':
+          description: The updated view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewDetail'
+        '422':
+          description: Invalid update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+      description: Change a portfolio view's filters, controllers, name or category.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - write:portfolios:craft
+        - read:portfolios:craft
+      parameters:
+      - in: path
+        name: portfolioId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: viewId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewUpdateBody'
+      summary: Update portfolio view
+      x-summary-source: derived
+    delete:
+      operationId: DeletePortfolioView
+      responses:
+        '200':
+          description: The view is deleted
+          content:
+            application/json:
+              schema:
+                properties:
+                  viewId:
+                    type: string
+                  deleted:
+                    type: boolean
+                required:
+                - viewId
+                - deleted
+                type: object
+        '404':
+          description: No view found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Delete a portfolio view.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - delete:portfolios:craft
+      parameters:
+      - in: path
+        name: portfolioId
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: viewId
+        required: true
+        schema:
+          type: string
+      summary: Delete portfolio view
+      x-summary-source: derived
+  /portfolio/{portfolioId}/view:
+    get:
+      operationId: FindPortfolioView
+      responses:
+        '200':
+          description: The view, or the candidates to choose between
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ViewLookupResponse'
+        '404':
+          description: No view with that name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Resolve a portfolio view by name.
+      tags:
+      - Views
+      security:
+      - api_key:
+        - read:portfolios:craft
+      parameters:
+      - in: path
+        name: portfolioId
+        required: true
+        schema:
+          type: string
+      - description: Exact view name (case-insensitive).
+        in: query
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: Narrow to `personal` or `workspace`.
+        in: query
+        name: ownerType
+        required: false
+        schema:
+          type: string
+          enum:
+          - personal
+          - workspace
+      - description: Narrow to a category name.
+        in: query
+        name: category
+        required: false
+        schema:
+          type: string
+      - description: Also return the stored state verbatim.
+        in: query
+        name: includeRaw
+        required: false
+        schema:
+          default: false
+          type: boolean
+      - description: Include released items in listItemsParams. A view with no status filter hides them, so they are excluded by default to match what the view shows.
+        in: query
+        name: includeCompleted
+        required: false
+        schema:
+          default: false
+          type: boolean
+      summary: Find portfolio view
+      x-summary-source: derived
+components:
+  schemas:
+    ViewSummary:
+      properties:
+        viewId:
+          type: string
+        name:
+          type: string
+        viewType:
+          type: string
+        ownerType:
+          type: string
+          enum:
+          - personal
+          - workspace
+        category:
+          type: string
+        workspaceId:
+          type: string
+        portfolioId:
+          type: string
+        webUrl:
+          type: string
+      required:
+      - viewId
+      - name
+      - viewType
+      - ownerType
+      type: object
+      additionalProperties: false
+    ViewCustomFieldFilter:
+      properties:
+        id:
+          type: string
+          description: Field id from get_workspace_custom_fields / get_portfolio_fields.
+        values:
+          items:
+            type: string
+          type: array
+          description: Option ids or labels.
+      required:
+      - id
+      - values
+      type: object
+      additionalProperties: false
+    Record_string.string_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    ViewCreateBody:
+      properties:
+        name:
+          type: string
+        viewType:
+          type: string
+          description: One of table, kanban, timeline, swimlanes, okr-table. Defaults to table.
+        ownerType:
+          type: string
+          enum:
+          - personal
+          - workspace
+          description: '`personal` (default) or `workspace`. Workspace views need admin rights.'
+        category:
+          type: string
+          description: Category name from the list endpoint. Required for workspace views.
+        filters:
+          $ref: '#/components/schemas/ViewFiltersInput'
+          description: Same vocabulary the item list endpoints accept.
+        controllers:
+          $ref: '#/components/schemas/ViewControllersInput'
+        columns:
+          items:
+            type: string
+          type: array
+          description: Visible columns, table and okr-table only.
+        layout:
+          items:
+            type: string
+          type: array
+          description: Card fields, kanban / timeline / swimlanes only.
+        columnColors:
+          properties: {}
+          additionalProperties:
+            type: string
+          type: object
+          description: 'Per-column colours as `#RRGGBB`, keyed like `columns`. Send `{}` to clear.
+
+            Duplicating a view: pass what get_view returned, or the copy loses them.'
+        compactMode:
+          type: string
+          description: 'Card density, kanban / timeline / swimlanes only: `compact` or `default`.'
+      required:
+      - name
+      type: object
+      additionalProperties: false
+    Record_string.unknown_:
+      properties: {}
+      type: object
+      description: Construct a type with a set of properties K of type T
+    ViewListResponse:
+      description: 'Saved views — the filters, grouping, sorting and columns a user has set up in
+
+        the app. Reading one lets a client work on exactly what the user sees;
+
+        creating one hands a result back to the user as something they can open.
+
+
+        Views belong to a workspace or a portfolio, and are either personal (only the
+
+        owner sees them) or workspace-wide (everyone, admins only to create). The
+
+        routes mirror that: the same five operations under both containers.'
+      properties:
+        views:
+          items:
+            $ref: '#/components/schemas/ViewSummary'
+          type: array
+        categories:
+          items:
+            $ref: '#/components/schemas/CategorySummary'
+          type: array
+          description: Categories the container's views menu is organised by.
+        canCreateWorkspaceViews:
+          type: boolean
+          description: False when the caller may only create personal views here.
+        page:
+          type: number
+          format: double
+        limit:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+      required:
+      - views
+      - categories
+      - canCreateWorkspaceViews
+      - page
+      - limit
+      - total
+      type: object
+      additionalProperties: false
+    WireView:
+      description: A view exactly as the views service stores it. Unknown props round-trip.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categoryId:
+          type: string
+        workspaceId:
+          type: string
+        personId:
+          type:
+          - string
+          - 'null'
+        ownerType:
+          type: string
+        viewType:
+          type: string
+        orderIndex:
+          type: string
+        category:
+          type:
+          - string
+          - 'null'
+        nameId:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        viewFields:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+        compactViewFields:
+          items:
+            type: string
+          type:
+          - array
+          - 'null'
+        compactMode:
+          type:
+          - string
+          - 'null'
+          description: Card density on a card-based view; empty string means never set.
+        groupBy:
+          type:
+          - string
+          - 'null'
+        groupByCustomFieldId:
+          type:
+          - string
+          - 'null'
+        secondaryGroupBy:
+          type:
+          - string
+          - 'null'
+        secondaryGroupByCustomFieldId:
+          type:
+          - string
+          - 'null'
+        sortBy:
+          type:
+          - string
+          - 'null'
+        sortByCustomFieldId:
+          type:
+          - string
+          - 'null'
+        reverse:
+          type:
+          - boolean
+          - 'null'
+        isChanged:
+          type: boolean
+        okrHierarchy:
+          type:
+          - string
+          - 'null'
+        fieldFilters:
+          allOf:
+          - $ref: '#/components/schemas/Record_string.unknown_'
+        filters:
+          allOf:
+          - $ref: '#/components/schemas/Record_string.unknown_'
+      type: object
+      additionalProperties: {}
+    ViewDateRange:
+      properties:
+        from:
+          type: string
+          description: ISO 8601 date.
+        to:
+          type: string
+          description: ISO 8601 date.
+      type: object
+      additionalProperties: false
+    ViewUpdateBody:
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        filters:
+          $ref: '#/components/schemas/ViewFiltersInput'
+          description: 'Merged per key onto the view''s current filters: a key you pass replaces
+
+            that key, a key you omit is untouched, an empty list clears one key. Pass
+
+            `replaceAllFilters` to drop everything you didn''t send instead.'
+        replaceAllFilters:
+          type: boolean
+        controllers:
+          $ref: '#/components/schemas/ViewControllersInput'
+        columns:
+          items:
+            type: string
+          type: array
+          description: 'Ordered visible columns — table and okr-table only. Replaces the current
+
+            set outright; there is no per-column merge.
+
+
+            Supported because the app changes columns on an existing view through the
+
+            same call. Without it an agent asked to add one column had to recreate the
+
+            whole view, which left the original behind as a duplicate.'
+        layout:
+          items:
+            type: string
+          type: array
+          description: Card fields — kanban, timeline and swimlanes only. Replaces the current set.
+        columnColors:
+          properties: {}
+          additionalProperties:
+            type: string
+          type: object
+          description: 'Per-column colours as `#RRGGBB`, keyed like `columns`. Send `{}` to clear.
+
+            Duplicating a view: pass what get_view returned, or the copy loses them.'
+        compactMode:
+          type: string
+          description: 'Card density, kanban / timeline / swimlanes only: `compact` or `default`.'
+      type: object
+      additionalProperties: false
+    ViewControllers:
+      properties:
+        sortBy:
+          type: string
+        sortDirection:
+          type: string
+          enum:
+          - asc
+          - desc
+        groupBy:
+          type: string
+        swimLanesBy:
+          type: string
+      type: object
+      additionalProperties: false
+    ViewFiltersInput:
+      description: 'A view''s filters, in the same vocabulary the item list endpoints use — so a
+
+        filter you can pass to list_items works here unchanged, and vice versa.
+
+
+        Every list takes ids OR names (names are resolved, and an unknown one is a
+
+        422 naming the valid values). An empty list clears that filter. `"-1"` means
+
+        "items with no value set", the same sentinel the app uses.
+
+
+        Portfolio views: `assignee` does not apply, and quarter / sprint / importance
+
+        are matched by name because a portfolio merges them across its workspaces.'
+      properties:
+        type:
+          items:
+            type: string
+          type: array
+          description: Item types — the view's hierarchy control. e.g. `epic`, `feature`, `story`.
+        status:
+          items:
+            type: string
+          type: array
+        importance:
+          items:
+            type: string
+          type: array
+        quarter:
+          items:
+            type: string
+          type: array
+          description: Release / quarter.
+        sprint:
+          items:
+            type: string
+          type: array
+        assignee:
+          items:
+            type: string
+          type: array
+          description: Workspace views only.
+        labels:
+          items:
+            type: string
+          type: array
+        createdBy:
+          items:
+            type: string
+          type: array
+        epic:
+          items:
+            type: string
+          type: array
+          description: Ancestor epic ids.
+        product:
+          items:
+            type: string
+          type: array
+          description: Product / theme names or ids — the Product an item sits under. Not the same as `workspace`.
+        workspace:
+          items:
+            type: string
+          type: array
+          description: Source workspace ids — which workspace a row came from. Portfolio views only.
+        initiative:
+          items:
+            type: string
+          type: array
+          description: Linked portfolio initiative ids.
+        objectives:
+          items:
+            type: string
+          type: array
+        keyResults:
+          items:
+            type: string
+          type: array
+        persona:
+          items:
+            type: string
+          type: array
+        statusCategory:
+          items:
+            type: string
+          type: array
+          description: 'Workflow bucket: `open`, `inProgress`, `done`.'
+        dependencies:
+          items:
+            type: string
+          type: array
+          description: 'Dependency Proximity: `none`, `related`, `blockedBy`, `blocks`.'
+        startDate:
+          $ref: '#/components/schemas/ViewDateRange'
+          description: Actual start date range.
+        endDate:
+          $ref: '#/components/schemas/ViewDateRange'
+          description: Actual end date range.
+        customFields:
+          items:
+            $ref: '#/components/schemas/ViewCustomFieldFilter'
+          type: array
+      type: object
+      additionalProperties: false
+    ValidateErrorJSON:
+      properties:
+        message:
+          type: string
+        details:
+          properties: {}
+          additionalProperties: {}
+          type: object
+      required:
+      - message
+      - details
+      type: object
+      additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+          description: 'Stable machine code, present on the responses that carry one — the widget''s 401/403/404 and the
+
+            attachment 413. Optional because most errors here only have a message, but it has to be part of
+
+            the schema: tsoa emits `additionalProperties: false`, so an undeclared key makes every coded
+
+            response violate the shape its own spec tells a caller to parse.
+
+
+            OPTIONAL RATHER THAN A SEPARATE CODED-ERROR SCHEMA, and not for brevity: on the routes that
+
+            carry codes, the same status can arrive with and without one. A widget-config 404 is
+
+            `widget_unknown` when the widget id misses and a bare `Feedback portal not found` when the
+
+            portal id does; a widget-config 401 is `token_invalid` for a bad token and a bare
+
+            `Forbidden, there is no auth token` when the header is absent. A variant with `error` required
+
+            would be declared on exactly those routes and would be wrong half the time they fail.
+
+
+            Branch on it when it is there and fall back to the status when it is not. The vocabulary:
+
+            401 `token_expired` (fetch a new token and retry once) | `token_invalid` | `dev_key_invalid` |
+
+            `dev_origin_rejected`;
+
+            403 `widget_not_enabled` | `insufficient_scope` | `mcp_disabled_by_account` | `no_paid_seat`;
+
+            404 `widget_unknown` | `widget_deleted` | `widget_inactive` | `widget_no_categories`;
+
+            413 `file_too_large`.
+
+            The widget half of that list is the contract in docs/CRA-24100-widget-token-endpoint.md and is
+
+            pinned by widgetFailureTaxonomy.test.ts — change the three together.
+
+
+            Left as a free string rather than an enum on purpose — a closed set turns every new code into
+
+            a breaking change for a generated client, and new codes are the whole point of the field.'
+      required:
+      - message
+      type: object
+      additionalProperties: false
+    CategorySummary:
+      properties:
+        name:
+          type: string
+        scope:
+          type: string
+          enum:
+          - workspace
+          - personal
+      required:
+      - name
+      - scope
+      type: object
+      additionalProperties: false
+    ViewControllersInput:
+      properties:
+        sortBy:
+          type: string
+          description: Sort axis, e.g. `status`, `importance`, `hierarchy`, `custom:<fieldId>`.
+        sortDirection:
+          type: string
+          enum:
+          - asc
+          - desc
+        groupBy:
+          type: string
+          description: Grouping axis. Not available on timeline views.
+        swimLanesBy:
+          type: string
+          description: Swim-lane axis. Timeline and swimlanes views only.
+      type: object
+      additionalProperties: false
+    ViewLookupResponse:
+      description: 'A name lookup resolves to one view, or reports every candidate so the caller
+
+        can narrow by ownerType / category. Two views may share a name — the id is
+
+        the identity, the name is a convenience.'
+      properties:
+        view:
+          $ref: '#/components/schemas/ViewDetail'
+        candidates:
+          items:
+            $ref: '#/components/schemas/ViewSummary'
+          type: array
+      type: object
+      additionalProperties: false
+    ViewDetail:
+      properties:
+        viewId:
+          type: string
+        name:
+          type: string
+        viewType:
+          type: string
+        ownerType:
+          type: string
+          enum:
+          - personal
+          - workspace
+        category:
+          type: string
+        workspaceId:
+          type: string
+        portfolioId:
+          type: string
+        webUrl:
+          type: string
+        controllers:
+          $ref: '#/components/schemas/ViewControllers'
+        columns:
+          items:
+            type: string
+          type: array
+        layout:
+          items:
+            type: string
+          type: array
+        compactMode:
+          type: string
+          description: 'Card density on a card-based view: `compact` or `default`.'
+        filters:
+          $ref: '#/components/schemas/Record_string.unknown_'
+        listItemsParams:
+          $ref: '#/components/schemas/Record_string.string_'
+          description: Pass straight to the tool named by `listItemsTool` to get the view's items.
+        listItemsTool:
+          type: string
+          enum:
+          - list_items
+          - list_portfolio_items
+          - list_feedback_items
+          description: 'Which list tool `listItemsParams` belongs to. Feedback views are the reason
+
+            this is stated rather than assumed — their items are not work items.'
+        unsupportedFilters:
+          items:
+            $ref: '#/components/schemas/UnsupportedFilter'
+          type: array
+          description: Filters the list endpoints cannot reproduce — the result will be wider.
+        columnColors:
+          $ref: '#/components/schemas/Record_string.string_'
+          description: 'Per-column colours, keyed the same way `columns` is. Absent when the view
+
+            has none.'
+        raw:
+          $ref: '#/components/schemas/WireView'
+          description: 'Only when includeRaw was asked for: the full stored state.'
+      required:
+      - viewId
+      - name
+      - viewType
+      - ownerType
+      - controllers
+      - filters
+      - listItemsParams
+      - listItemsTool
+      type: object
+      additionalProperties: false
+    UnsupportedFilter:
+      description: A filter the view holds that no list endpoint can reproduce.
+      properties:
+        filter:
+          type: string
+        reason:
+          type: string
+      required:
+      - filter
+      - reason
+      type: object
+      additionalProperties: false
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
+    portal_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A short-lived token signed by the customer's own server with their feedback portal's widget secret, carrying the identity of whoever is submitting. Accepted only on the two feedback-creation routes, in place of x-api-key. Used by the portal's embedded feedback widget; the customer's own integration uses x-api-key instead.
+externalDocs:
+  description: Help center
+  url: https://help.craft.io/en/

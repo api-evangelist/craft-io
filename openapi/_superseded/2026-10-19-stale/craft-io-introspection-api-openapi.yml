@@ -1,0 +1,111 @@
+openapi: 3.2.0
+info:
+  title: Craft.io Workspace Introspection API
+  description: REST API providing access to workspace data including work items, custom fields, terminology, initiatives, products, epics, features, and stories within Craft.io product workspaces.
+  version: 1.0.0
+  contact:
+    name: Craft.io Support
+    url: https://help.craft.io/
+    email: support@craft.io
+servers:
+- url: /
+tags:
+- name: Introspection
+paths:
+  /me/api-key:
+    get:
+      operationId: GetMyApiKey
+      responses:
+        '200':
+          description: API key introspection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyIntrospection'
+        '401':
+          description: No valid API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Returns the current API key''s authorization context — its bound user,
+
+        granted scopes, and any resource-scope narrowing. Useful for AI clients
+
+        (MCP) to hide tools that the key cannot use, instead of failing at the
+
+        first request.'
+      tags:
+      - Introspection
+      security:
+      - api_key: []
+      parameters: []
+      summary: Get my api key
+      x-summary-source: derived
+components:
+  schemas:
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+      - message
+      type: object
+      additionalProperties: false
+    ApiKeyIntrospection:
+      description: 'Introspection endpoints for "what is the current API key allowed to do".
+
+        Used by clients (notably the MCP server) to self-filter the tools they expose.'
+      properties:
+        userId:
+          type: string
+          description: The user this key authenticates as.
+        accountId:
+          type: string
+          description: The account this key belongs to.
+        scopes:
+          items:
+            type: string
+          type: array
+          description: Granted granular scope strings (already normalized).
+        resourceScope:
+          properties:
+            feedback_portals:
+              items:
+                type: string
+              type:
+              - array
+              - 'null'
+            portfolios:
+              items:
+                type: string
+              type:
+              - array
+              - 'null'
+            workspaces:
+              items:
+                type: string
+              type:
+              - array
+              - 'null'
+          type: object
+          description: 'Optional resource-scope narrowing. When a dimension is null/missing the key
+
+            has access to every instance the bound user can see; when present it is the
+
+            exclusive allowlist of ids on that dimension.'
+        mcpAccess:
+          type: boolean
+      required:
+      - userId
+      - accountId
+      - scopes
+      - resourceScope
+      - mcpAccess
+      type: object
+      additionalProperties: false
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key

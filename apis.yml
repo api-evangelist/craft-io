@@ -199,6 +199,17 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/craft-io-workspaces-api-openapi.yml
+- aid: craft-io:craft-io-views-api
+  name: Craft.io Views API
+  description: The Views API from Craft.io — 6 operation(s) for views.
+  humanURL: >-
+    https://help.craft.io/en/articles/8385550-craft-io-public-apis-for-workspace-portfolio-and-feedback-portal
+  baseURL: https://api.craft.io
+  tags:
+  - Views
+  properties:
+  - type: OpenAPI
+    url: openapi/craft-io-views-api-openapi.yml
 common:
   - type: CapabilityMap
     url: capabilities/craft-io-capability-edges.yml

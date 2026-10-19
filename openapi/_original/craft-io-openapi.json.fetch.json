@@ -1,0 +1,12 @@
+{
+ "url": "https://api.craft.io/openapi.json",
+ "final": "https://api.craft.io/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 199732,
+ "sha256": "1783050d3298bc182f76388e68cb437e5e9b17c2b024041ee67fa031f79637df",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-archived: the provider's current document replaced a stale archive (roadmap#793); the old files are in openapi/_superseded/2026-10-19-stale"
+}

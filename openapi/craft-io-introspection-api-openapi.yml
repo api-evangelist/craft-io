@@ -1,12 +1,20 @@
 openapi: 3.2.0
 info:
-  title: Craft.io Workspace Introspection API
-  description: REST API providing access to workspace data including work items, custom fields, terminology, initiatives, products, epics, features, and stories within Craft.io product workspaces.
+  title: Craft.io Public Introspection API
   version: 1.0.0
-  contact:
-    name: Craft.io Support
-    url: https://help.craft.io/
-    email: support@craft.io
+  description: 'Our platform provides a set of comprehensive public APIs that allows users and applications to access and retrieve data about working items within our system.
+
+
+    With our API, users can easily integrate item information into their own applications, such as dashboards or organizational tools for customer service, sales, and marketing.
+
+
+    Our API supports a variety of data formats and retrieval methods, making it easy to customize and integrate with your existing systems. Whether you''re looking to build custom reports, track inventory, or monitor sales trends, our API provides the flexibility and scalability you need to get the job done.
+
+
+    For getting an API key just approach our support team at support@craft.io or on the app chat (‘contact support’).'
+  license:
+    name: Terms and conditions
+    url: https://craft.io/terms-and-conditions/
 servers:
 - url: /
 tags:
@@ -48,6 +56,50 @@ components:
       properties:
         message:
           type: string
+        error:
+          type: string
+          description: 'Stable machine code, present on the responses that carry one — the widget''s 401/403/404 and the
+
+            attachment 413. Optional because most errors here only have a message, but it has to be part of
+
+            the schema: tsoa emits `additionalProperties: false`, so an undeclared key makes every coded
+
+            response violate the shape its own spec tells a caller to parse.
+
+
+            OPTIONAL RATHER THAN A SEPARATE CODED-ERROR SCHEMA, and not for brevity: on the routes that
+
+            carry codes, the same status can arrive with and without one. A widget-config 404 is
+
+            `widget_unknown` when the widget id misses and a bare `Feedback portal not found` when the
+
+            portal id does; a widget-config 401 is `token_invalid` for a bad token and a bare
+
+            `Forbidden, there is no auth token` when the header is absent. A variant with `error` required
+
+            would be declared on exactly those routes and would be wrong half the time they fail.
+
+
+            Branch on it when it is there and fall back to the status when it is not. The vocabulary:
+
+            401 `token_expired` (fetch a new token and retry once) | `token_invalid` | `dev_key_invalid` |
+
+            `dev_origin_rejected`;
+
+            403 `widget_not_enabled` | `insufficient_scope` | `mcp_disabled_by_account` | `no_paid_seat`;
+
+            404 `widget_unknown` | `widget_deleted` | `widget_inactive` | `widget_no_categories`;
+
+            413 `file_too_large`.
+
+            The widget half of that list is the contract in docs/CRA-24100-widget-token-endpoint.md and is
+
+            pinned by widgetFailureTaxonomy.test.ts — change the three together.
+
+
+            Left as a free string rather than an enum on purpose — a closed set turns every new code into
+
+            a breaking change for a generated client, and new codes are the whole point of the field.'
       required:
       - message
       type: object
@@ -109,3 +161,11 @@ components:
       type: apiKey
       in: header
       name: x-api-key
+    portal_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A short-lived token signed by the customer's own server with their feedback portal's widget secret, carrying the identity of whoever is submitting. Accepted only on the two feedback-creation routes, in place of x-api-key. Used by the portal's embedded feedback widget; the customer's own integration uses x-api-key instead.
+externalDocs:
+  description: Help center
+  url: https://help.craft.io/en/

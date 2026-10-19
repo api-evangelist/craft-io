@@ -1,12 +1,20 @@
 openapi: 3.2.0
 info:
-  title: Craft.io Workspace Workspaces API
-  description: REST API providing access to workspace data including work items, custom fields, terminology, initiatives, products, epics, features, and stories within Craft.io product workspaces.
+  title: Craft.io Public Workspaces API
   version: 1.0.0
-  contact:
-    name: Craft.io Support
-    url: https://help.craft.io/
-    email: support@craft.io
+  description: 'Our platform provides a set of comprehensive public APIs that allows users and applications to access and retrieve data about working items within our system.
+
+
+    With our API, users can easily integrate item information into their own applications, such as dashboards or organizational tools for customer service, sales, and marketing.
+
+
+    Our API supports a variety of data formats and retrieval methods, making it easy to customize and integrate with your existing systems. Whether you''re looking to build custom reports, track inventory, or monitor sales trends, our API provides the flexibility and scalability you need to get the job done.
+
+
+    For getting an API key just approach our support team at support@craft.io or on the app chat (‘contact support’).'
+  license:
+    name: Terms and conditions
+    url: https://craft.io/terms-and-conditions/
 servers:
 - url: /
 tags:
@@ -224,29 +232,166 @@ paths:
           type: string
       summary: Get terminology
       x-summary-source: derived
+  /workspace/{workspaceId}/statuses:
+    get:
+      operationId: GetWorkspaceStatuses
+      responses:
+        '200':
+          description: A list of the workspace’s statuses
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/ItemStatus'
+                type: array
+        '400':
+          description: Invalid workspace ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while fetching statuses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: Get the workspace’s full native status list (“Workflow & statuses”)
+      tags:
+      - Workspaces
+      security:
+      - api_key:
+        - read:workspace-meta:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      summary: Get workspace statuses
+      x-summary-source: derived
+  /workspace/{workspaceId}/capacity:
+    get:
+      operationId: GetWorkspaceCapacity
+      responses:
+        '200':
+          description: Capacity limits per period per capacity field
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/CapacityRow'
+                type: array
+        '400':
+          description: Invalid workspace ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid periodType or id list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Get the capacity limits a workspace plans against, per period per capacity field
+
+
+        The item values say how much work is loaded into a period; this says how
+
+        much the period can hold. `netCapacity` is the figure the Capacity Planning
+
+        view shows.
+
+
+        A capacity field is a NUMBER custom field flagged `capacityEnabled` in
+
+        get_workspace_custom_fields, or the built-in `storyPoints`, which is what
+
+        most workspaces actually plan against.'
+      tags:
+      - Workspaces
+      security:
+      - api_key:
+        - read:workspace-meta:craft
+      parameters:
+      - in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+      - description: 'Which periods to read: `sprint`, `quarter`, or `timeframe` (the options of a timeframe custom field).'
+        in: query
+        name: periodType
+        required: true
+        schema:
+          $ref: '#/components/schemas/CapacityPeriodType'
+      - description: Optional comma-separated period ids. Omit for every period.
+        in: query
+        name: periodIds
+        required: false
+        schema:
+          type: string
+      - description: Optional comma-separated capacity field ids; `storyPoints` is accepted.
+        in: query
+        name: capacityFieldIds
+        required: false
+        schema:
+          type: string
+      summary: Get workspace capacity
+      x-summary-source: derived
 components:
   schemas:
-    GeneralErrorResponse:
+    Terminology:
       properties:
-        message:
+        category:
+          type: string
+        default:
+          type: string
+        customSingle:
+          type: string
+        customPlural:
           type: string
       required:
-      - message
-      type: object
-      additionalProperties: false
-    Workspace:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        key:
-          type: string
-        webUrl:
-          type: string
-          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+      - category
+      - default
+      - customSingle
       type: object
       additionalProperties: false
     OptionShape:
@@ -263,6 +408,21 @@ components:
           type: string
         type:
           type: string
+        capacityEnabled:
+          type: boolean
+          description: 'NUMBER fields only: true when the container plans capacity against this
+
+            field. A capacity field (FE, BE) is otherwise indistinguishable from any
+
+            other number (Reach, ACV) here. Read the limits with /capacity.'
+        categoryId:
+          type:
+          - string
+          - 'null'
+        categoryName:
+          type:
+          - string
+          - 'null'
         values:
           items:
             type: string
@@ -273,12 +433,155 @@ components:
           type: array
         optionShape:
           $ref: '#/components/schemas/OptionShape'
+        multi:
+          type: boolean
+        source:
+          type: string
+          enum:
+          - portal
+          - workspace
       required:
       - id
       - name
       - type
       type: object
       additionalProperties: false
+    CapacityLimit:
+      description: 'A capacity limit for one field in one period.
+
+
+        `netCapacity` is the figure the Capacity Planning view shows, read from what
+
+        the app stored rather than recomputed — the two disagree whenever no team
+
+        size is set, and the stored value is the one the app plans against.'
+      properties:
+        mode:
+          type: string
+          enum:
+          - perMember
+          - flatLimit
+          description: 'How the limit was expressed. `flatLimit` is a number typed straight in;
+
+            `perMember` is a team size and a per-person figure less a buffer.'
+        capacityPerPerson:
+          type: number
+          format: double
+          description: perMember only.
+        numberOfPeople:
+          type: number
+          format: double
+          description: perMember only.
+        bufferPercent:
+          type: number
+          format: double
+          description: perMember only, as a percentage (20 means 20%).
+        flatLimit:
+          type: number
+          format: double
+          description: flatLimit only.
+        netCapacity:
+          type: number
+          format: double
+          description: What the period can hold. Compare the sum of item values against this.
+      required:
+      - mode
+      - netCapacity
+      type: object
+      additionalProperties: false
+    ItemStatus:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        phase:
+          $ref: '#/components/schemas/StatusPhase'
+          description: Workflow bucket the UI groups the status under. Absent if unmapped.
+        color:
+          type:
+          - string
+          - 'null'
+          description: Swatch shown in the UI, e.g. `#586CF5`.
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
+    StatusPhase:
+      type: string
+      enum:
+      - open
+      - in_progress
+      - done
+      - released
+      description: Workflow bucket a status belongs to, mirroring the core's GlobalStatus states.
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+          description: 'Stable machine code, present on the responses that carry one — the widget''s 401/403/404 and the
+
+            attachment 413. Optional because most errors here only have a message, but it has to be part of
+
+            the schema: tsoa emits `additionalProperties: false`, so an undeclared key makes every coded
+
+            response violate the shape its own spec tells a caller to parse.
+
+
+            OPTIONAL RATHER THAN A SEPARATE CODED-ERROR SCHEMA, and not for brevity: on the routes that
+
+            carry codes, the same status can arrive with and without one. A widget-config 404 is
+
+            `widget_unknown` when the widget id misses and a bare `Feedback portal not found` when the
+
+            portal id does; a widget-config 401 is `token_invalid` for a bad token and a bare
+
+            `Forbidden, there is no auth token` when the header is absent. A variant with `error` required
+
+            would be declared on exactly those routes and would be wrong half the time they fail.
+
+
+            Branch on it when it is there and fall back to the status when it is not. The vocabulary:
+
+            401 `token_expired` (fetch a new token and retry once) | `token_invalid` | `dev_key_invalid` |
+
+            `dev_origin_rejected`;
+
+            403 `widget_not_enabled` | `insufficient_scope` | `mcp_disabled_by_account` | `no_paid_seat`;
+
+            404 `widget_unknown` | `widget_deleted` | `widget_inactive` | `widget_no_categories`;
+
+            413 `file_too_large`.
+
+            The widget half of that list is the contract in docs/CRA-24100-widget-token-endpoint.md and is
+
+            pinned by widgetFailureTaxonomy.test.ts — change the three together.
+
+
+            Left as a free string rather than an enum on purpose — a closed set turns every new code into
+
+            a breaking change for a generated client, and new codes are the whole point of the field.'
+      required:
+      - message
+      type: object
+      additionalProperties: false
+    CapacityPeriodType:
+      type: string
+      enum:
+      - sprint
+      - quarter
+      - timeframe
+      description: 'A period a capacity limit can be set against.
+
+
+        `timeframe` is not a period table: it is an option of a timeframe custom
+
+        field (H1 2025, Q3''2026), which a workspace can plan against instead of
+
+        sprints or quarters. Its period id is the option id.'
     CustomFieldOption:
       properties:
         id:
@@ -298,29 +601,100 @@ components:
       - label
       type: object
       additionalProperties: false
+    CapacityRow:
+      properties:
+        period:
+          properties:
+            endDate:
+              type: string
+              format: date-time
+            startDate:
+              type: string
+              format: date-time
+            type:
+              $ref: '#/components/schemas/CapacityPeriodType'
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - type
+          - name
+          - id
+          type: object
+        periodField:
+          properties:
+            name:
+              type: string
+            id:
+              type: string
+          required:
+          - name
+          - id
+          type: object
+          description: 'Set for `timeframe` periods: the timeframe field the option belongs to.'
+        capacityField:
+          properties:
+            deleted:
+              type: boolean
+            name:
+              type:
+              - string
+              - 'null'
+            id:
+              type: string
+          required:
+          - name
+          - id
+          type: object
+          description: '`storyPoints` for the built-in field, otherwise a custom field id.
+
+
+            `name` is null when the id resolves to nothing — the field was deleted but
+
+            the period kept its capacity setting. `deleted` marks that explicitly, so a
+
+            caller never has to infer it by comparing the name against the id.'
+        limit:
+          allOf:
+          - $ref: '#/components/schemas/CapacityLimit'
+          description: Null when this period sets no capacity for the field — not a zero limit.
+      required:
+      - period
+      - capacityField
+      - limit
+      type: object
+      additionalProperties: false
+    Workspace:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        key:
+          type: string
+        webUrl:
+          type: string
+          description: Canonical Craft.io app URL for this workspace. Computed in PublishService.
+      type: object
+      additionalProperties: false
     TerminologyList_Terminology_:
       properties: {}
       type: object
       additionalProperties:
         $ref: '#/components/schemas/Terminology'
-    Terminology:
-      properties:
-        category:
-          type: string
-        default:
-          type: string
-        customSingle:
-          type: string
-        customPlural:
-          type: string
-      required:
-      - category
-      - default
-      - customSingle
-      type: object
-      additionalProperties: false
   securitySchemes:
     api_key:
       type: apiKey
       in: header
       name: x-api-key
+    portal_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A short-lived token signed by the customer's own server with their feedback portal's widget secret, carrying the identity of whoever is submitting. Accepted only on the two feedback-creation routes, in place of x-api-key. Used by the portal's embedded feedback widget; the customer's own integration uses x-api-key instead.
+externalDocs:
+  description: Help center
+  url: https://help.craft.io/en/

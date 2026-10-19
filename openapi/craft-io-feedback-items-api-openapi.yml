@@ -1,12 +1,20 @@
 openapi: 3.2.0
 info:
-  title: Craft.io Feedback Portal Feedback items API
-  description: REST API for managing customer feedback portals, including listing portals and categories, retrieving feedback items, and submitting new feedback via POST requests.
+  title: Craft.io Public Feedback items API
   version: 1.0.0
-  contact:
-    name: Craft.io Support
-    url: https://help.craft.io/
-    email: support@craft.io
+  description: 'Our platform provides a set of comprehensive public APIs that allows users and applications to access and retrieve data about working items within our system.
+
+
+    With our API, users can easily integrate item information into their own applications, such as dashboards or organizational tools for customer service, sales, and marketing.
+
+
+    Our API supports a variety of data formats and retrieval methods, making it easy to customize and integrate with your existing systems. Whether you''re looking to build custom reports, track inventory, or monitor sales trends, our API provides the flexibility and scalability you need to get the job done.
+
+
+    For getting an API key just approach our support team at support@craft.io or on the app chat (‘contact support’).'
+  license:
+    name: Terms and conditions
+    url: https://craft.io/terms-and-conditions/
 servers:
 - url: /
 tags:
@@ -53,12 +61,6 @@ paths:
                     labels:
                     - Label 1
                     - Label 2
-        '400':
-          description: Invalid portal ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -71,6 +73,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while fetching ideas in a feedback portal
           content:
@@ -121,7 +129,8 @@ paths:
         required: false
         schema:
           type: string
-      - in: query
+      - description: 'Additive include-list (or `all`): default is metadata-only; add `description`, `customFields`, `comments`, `linkedItems`, or a custom-field name/id to include it. Unlike the item endpoints this ADDS to the response rather than subsetting it. Unknown tokens are rejected 422.'
+        in: query
         name: fields
         required: false
         schema:
@@ -184,6 +193,11 @@ paths:
         schema:
           format: date-time
           type: string
+      - in: query
+        name: customFields
+        required: false
+        schema:
+          type: string
       summary: Get ideas
       x-summary-source: derived
   /feedback_item/{ideaId}:
@@ -226,12 +240,6 @@ paths:
                     labels:
                     - Label 1
                     - Label 2
-        '400':
-          description: Invalid item ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -250,6 +258,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid item ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while fetching ideas in a feedback portal
           content:
@@ -268,7 +282,484 @@ paths:
         required: true
         schema:
           type: string
+      - description: Optional comma-separated include-list (or `all`). Omit for the full-detail default. Unknown tokens (not a built-in field or a portal custom-field name/id) are rejected 422.
+        in: query
+        name: fields
+        required: false
+        schema:
+          type: string
       summary: Get idea
+      x-summary-source: derived
+  /feedback_item/{feedbackItemId}/connect:
+    post:
+      operationId: ConnectFeedback
+      responses:
+        '200':
+          description: The feedback item is connected to the work items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectFeedbackResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No idea found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid item ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+        '500':
+          description: An error occurred while connecting the feedback item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Connect an existing feedback item to one or more existing work items.
+
+        Idempotent: items already linked are left untouched.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: feedbackItemId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectFeedbackRequest'
+      summary: Connect feedback
+      x-summary-source: derived
+  /feedback_item/{feedbackItemId}/disconnect:
+    post:
+      operationId: DisconnectFeedback
+      responses:
+        '200':
+          description: The feedback item is disconnected from the work items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisconnectFeedbackResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No idea found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid item ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+        '500':
+          description: An error occurred while disconnecting the feedback item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Unlink a feedback item from one or more work items — the inverse of
+
+        connect. Idempotent: ids that aren''t currently linked are ignored, so an
+
+        agent can safely undo a wrong connect or retry. Returns the remaining
+
+        connections (same shape as connect).'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: feedbackItemId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisconnectFeedbackRequest'
+      summary: Disconnect feedback
+      x-summary-source: derived
+  /feedback_item/{feedbackItemId}/promote:
+    post:
+      operationId: PromoteFeedback
+      responses:
+        '200':
+          description: The feedback item is promoted to a new work item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoteFeedbackResponse'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No idea found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid item ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+        '500':
+          description: An error occurred while promoting the feedback item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Promote a feedback item into a new work item created under the given
+
+        parent (themes→epic, epics→story/bug/etc, leaf items→sub-task) and link
+
+        them atomically.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: feedbackItemId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromoteFeedbackRequest'
+      summary: Promote feedback
+      x-summary-source: derived
+  /feedback_item/{feedbackItemId}:
+    patch:
+      operationId: UpdateFeedback
+      responses:
+        '200':
+          description: The updated feedback item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackItem'
+              examples:
+                Example 1:
+                  value:
+                    id: '2305456780315711635'
+                    shortId: AAR-15
+                    link: https://portal.ideas-test.craft.io/DAR-15
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No idea found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: A field value could not be resolved for this portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '500':
+          description: An error occurred while updating the feedback item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'Update an existing feedback item. All fields optional (partial update);
+
+        only provided fields change. feedbackItemId accepts a numeric id or a
+
+        `KEY-N` shortId. Returns the full updated feedback item.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: feedbackItemId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFeedbackRequest'
+      summary: Update feedback
+      x-summary-source: derived
+  /feedback_item/{feedbackItemId}/comment:
+    post:
+      operationId: AddFeedbackComment
+      responses:
+        '201':
+          description: The created comment id
+          content:
+            application/json:
+              schema:
+                properties:
+                  internal:
+                    type: boolean
+                  id:
+                    type: string
+                required:
+                - internal
+                - id
+                type: object
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No feedback item found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+      description: 'Add a comment to a feedback item — a public portal comment (default) or a
+
+        private internal team note (`internal: true`). Append-only (no edit/delete);
+
+        plain text, no mentions yet. Read them back via get_feedback_item.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: feedbackItemId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddFeedbackCommentRequest'
+      summary: Add feedback comment
+      x-summary-source: derived
+  /feedback_items/bulk:
+    post:
+      operationId: UpdateFeedbackBulk
+      responses:
+        '200':
+          description: Per-item results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkWriteResult'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+      description: 'Bulk-update feedback items in one call (= N × PATCH feedback_item). Accepts
+
+        an array of the same payload plus a shared options envelope. Partial-success:
+
+        each item is validated/resolved independently and forwarded to the core bulk
+
+        endpoint in ONE call; failures are isolated and reported per request index.
+
+        Max 100 items.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkFeedbackUpdateRequest'
+      summary: Update feedback bulk
+      x-summary-source: derived
+  /feedback_items/connections/bulk:
+    post:
+      operationId: ManageConnectionsBulk
+      responses:
+        '200':
+          description: Per-item results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkWriteResult'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+      description: 'Bulk feedback connections in one call (= N × manage_feedback_connection).
+
+        Each item carries its own mode + payload. Partial-success; resolved ops are
+
+        forwarded to the core bulk endpoint in ONE call. Max 100 items.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkFeedbackConnectionRequest'
+      summary: Manage connections bulk
+      x-summary-source: derived
+  /feedback_portal/{portalId}/companies:
+    get:
+      operationId: GetPortalCompanies
+      responses:
+        '200':
+          description: A list of the portal companies
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/PortalCompany'
+                type: array
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid portal ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+        '500':
+          description: An error occurred while fetching portal companies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+      description: 'List a feedback portal''s customer companies ({id, name}) — for resolving the
+
+        `company` field on create/update. Optional `keyword` name filter + `limit`.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - read:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: keyword
+        required: false
+        schema:
+          type: string
+      - in: query
+        name: limit
+        required: false
+        schema:
+          format: double
+          type: number
+      summary: Get portal companies
       x-summary-source: derived
   /feedback_portal/{portalId}/plain_feedback:
     post:
@@ -286,12 +777,6 @@ paths:
                     id: '2305456780315711635'
                     shortId: AAR-15
                     link: https://portal.ideas-test.craft.io/DAR-15
-        '400':
-          description: Invalid item ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -304,13 +789,99 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid request — permanent, do not retry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while creating a plain feedback
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
-      description: Create new plain feedbacks and submit to the desired feedback portal for further evaluation
+        '503':
+          description: 'Temporarily unable to complete a valid request — RETRY THIS. Carries `Retry-After` and `code: "retryable"`, which is what distinguishes it from the permanent 4xx failures above.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetryableErrorResponse'
+      description: 'Create a feedback item without custom fields, attributed to the person who submitted it. Identical to `POST /feedback_portal/{portalId}/feedback` except that it accepts no
+
+        `customFields`. Everything below applies to both. **Discovering what to send.** Do not hard-code a field list. `GET /feedback_portal/{portalId}/forms`
+
+        returns each form with its categories and which fields it requires, and
+
+        `GET /feedback_portal/{portalId}/custom_fields` returns the field definitions and their allowed
+
+        values. Both are readable with any key that can read the portal, and a form definition is the
+
+        same for every visitor — so a client can render a form dynamically and never drift from what
+
+        the portal actually defines. **Attribution.** Send `owner` (the submitter''s email) and, if you have one, `submitterId` —
+
+        your own id for that person, which is the stronger key — plus `submitterName`, without which
+
+        the portal can only show the local part of the address. A submitter the portal has not seen is
+
+        created as a portal user who holds no password and can never sign in; they exist so the
+
+        feedback is attributed to a real person and so their next submission resolves to the same one. A submission that MATCHES an existing submitter also refreshes their stored name and
+
+        notification address from what you sent, so a rename or an address change on your side needs no
+
+        separate reconciliation. Omit all of them, or send `anonymous: true`, and the item is attributed
+
+        to the portal''s anonymous submitter instead. Attributed submissions require pass-through
+
+        identity to be enabled on the portal. **Retries may duplicate the ITEM, never the person.** There is no idempotency key. If a
+
+        request times out and you re-send it, the submitter resolves to the same person — that is
+
+        guaranteed — but you may get a second feedback item, which is visible in the portal and
+
+        deletable. Guard on your own side if a duplicate item matters to you. **Which failures to retry.** `503` means the request was fine and Craft could not complete it:
+
+        retry it. Any `4xx` means the request itself is wrong — retrying will not help, so raise it
+
+        instead. Craft never guesses that two submissions are the same one, so identical content is
+
+        never deduplicated. **A second credential, for submitting from a browser.** This route also accepts
+
+        `Authorization: Bearer ` in place of `x-api-key` — a short-lived token your own server
+
+        signs with your feedback portal''s widget secret (scheme `portal_token`). It exists because no
+
+        credential that reaches a browser can be kept secret, so the page carries a signed claim about
+
+        who is submitting rather than a key. On that credential the identity is taken from the token''s
+
+        claims (`sub`, `email`, `name`, `company`, `iss`) and `owner`, `submitterId`, `issuer`,
+
+        `submitterName`, `anonymous` and `company` in the BODY are rejected with 422 — the page is
+
+        under the submitter''s control and the token is not. The token is good for one hour from `iat`
+
+        whatever its `exp` says, covers as many submissions as the person makes inside that hour, and
+
+        is not single use. A `401` with `error: "token_expired"` means fetch a new one and retry;
+
+        `error: "token_invalid"` will never succeed on retry. **Before you build the signing half**, a portal can issue a *development* key
+
+        (`Authorization: Bearer cwk_dev_…`) which is sent as-is with the identity fields in the body,
+
+        accepted only from an origin the administrator registered as development. Everything it creates
+
+        is marked as development in the portal''s user list. It is a different key from the production
+
+        one, so what you paste into a page while building can never sign a real submission. **What to send, and how to know it is right.** `GET /feedback_portal/{portalId}/widget/{widgetId}/config`
+
+        returns the widget''s categories and the portal''s own fields with their `required` flags, so a
+
+        form can be rendered from the portal''s definition and a missing field caught before posting
+
+        rather than by a rejection here.'
       tags:
       - Feedback items
       security:
@@ -346,12 +917,6 @@ paths:
                     id: '2305456780315711635'
                     shortId: AAR-15
                     link: https://portal.ideas-test.craft.io/DAR-15
-        '400':
-          description: Invalid item ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GeneralErrorResponse'
         '401':
           description: No access to account
           content:
@@ -364,13 +929,97 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: Invalid request — permanent, do not retry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
         '500':
           description: An error occurred while creating a plain feedback
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralErrorResponse'
-      description: Create a new feedback and submit to the desired feedback portal for further evaluation
+        '503':
+          description: 'Temporarily unable to complete a valid request — RETRY THIS. Carries `Retry-After` and `code: "retryable"`, which is what distinguishes it from the permanent 4xx failures above.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetryableErrorResponse'
+      description: 'Create a feedback item, attributed to the person who submitted it. **Discovering what to send.** Do not hard-code a field list. `GET /feedback_portal/{portalId}/forms`
+
+        returns each form with its categories and which fields it requires, and
+
+        `GET /feedback_portal/{portalId}/custom_fields` returns the field definitions and their allowed
+
+        values. Both are readable with any key that can read the portal, and a form definition is the
+
+        same for every visitor — so a client can render a form dynamically and never drift from what
+
+        the portal actually defines. **Attribution.** Send `owner` (the submitter''s email) and, if you have one, `submitterId` —
+
+        your own id for that person, which is the stronger key — plus `submitterName`, without which
+
+        the portal can only show the local part of the address. A submitter the portal has not seen is
+
+        created as a portal user who holds no password and can never sign in; they exist so the
+
+        feedback is attributed to a real person and so their next submission resolves to the same one. A submission that MATCHES an existing submitter also refreshes their stored name and
+
+        notification address from what you sent, so a rename or an address change on your side needs no
+
+        separate reconciliation. Omit all of them, or send `anonymous: true`, and the item is attributed
+
+        to the portal''s anonymous submitter instead. Attributed submissions require pass-through
+
+        identity to be enabled on the portal. **Retries may duplicate the ITEM, never the person.** There is no idempotency key. If a
+
+        request times out and you re-send it, the submitter resolves to the same person — that is
+
+        guaranteed — but you may get a second feedback item, which is visible in the portal and
+
+        deletable. Guard on your own side if a duplicate item matters to you. **Which failures to retry.** `503` means the request was fine and Craft could not complete it:
+
+        retry it. Any `4xx` means the request itself is wrong — retrying will not help, so raise it
+
+        instead. Craft never guesses that two submissions are the same one, so identical content is
+
+        never deduplicated. **A second credential, for submitting from a browser.** This route also accepts
+
+        `Authorization: Bearer ` in place of `x-api-key` — a short-lived token your own server
+
+        signs with your feedback portal''s widget secret (scheme `portal_token`). It exists because no
+
+        credential that reaches a browser can be kept secret, so the page carries a signed claim about
+
+        who is submitting rather than a key. On that credential the identity is taken from the token''s
+
+        claims (`sub`, `email`, `name`, `company`, `iss`) and `owner`, `submitterId`, `issuer`,
+
+        `submitterName`, `anonymous` and `company` in the BODY are rejected with 422 — the page is
+
+        under the submitter''s control and the token is not. The token is good for one hour from `iat`
+
+        whatever its `exp` says, covers as many submissions as the person makes inside that hour, and
+
+        is not single use. A `401` with `error: "token_expired"` means fetch a new one and retry;
+
+        `error: "token_invalid"` will never succeed on retry. **Before you build the signing half**, a portal can issue a *development* key
+
+        (`Authorization: Bearer cwk_dev_…`) which is sent as-is with the identity fields in the body,
+
+        accepted only from an origin the administrator registered as development. Everything it creates
+
+        is marked as development in the portal''s user list. It is a different key from the production
+
+        one, so what you paste into a page while building can never sign a real submission. **What to send, and how to know it is right.** `GET /feedback_portal/{portalId}/widget/{widgetId}/config`
+
+        returns the widget''s categories and the portal''s own fields with their `required` flags, so a
+
+        form can be rendered from the portal''s definition and a missing field caught before posting
+
+        rather than by a rejection here.'
       tags:
       - Feedback items
       security:
@@ -390,73 +1039,127 @@ paths:
               $ref: '#/components/schemas/IdeaRequest'
       summary: Post idea
       x-summary-source: derived
+  /feedback_portal/{portalId}/attachment:
+    post:
+      operationId: PostAttachment
+      responses:
+        '200':
+          description: The stored file — pass its id in `attachmentIds` when you create the feedback item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedbackAttachment'
+        '401':
+          description: No access to account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '404':
+          description: No such feedback portal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '413':
+          description: 'The file is larger than 20 MB — carries `error: "file_too_large"`'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '422':
+          description: No file sent, an unsupported file type, or contents that do not match the extension — permanent, do not retry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateErrorJSON'
+        '500':
+          description: An error occurred while storing the attachment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralErrorResponse'
+        '503':
+          description: 'Temporarily unable to complete a valid request — RETRY THIS. Carries `Retry-After` and `code: "retryable"`.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetryableErrorResponse'
+      description: 'Upload a file so it can be attached to a piece of feedback.
+
+
+        **Upload first, then submit.** `multipart/form-data` with the file in a field named `file`. The
+
+        response carries an `id`; pass it in `attachmentIds` on
+
+        `POST /feedback_portal/{portalId}/feedback` or `.../plain_feedback` to file it with that
+
+        submission. Call this once per file.
+
+
+        That order is not a preference. A form''s file picker fires while the person is still writing,
+
+        so there is no feedback item to attach to yet — and it means a failed upload costs a retry of
+
+        one file rather than the whole submission.
+
+
+        **Until a create call names it, the file belongs to the portal and to nothing else.** It is not
+
+        visible on any feedback item, and an id from a different portal is refused.
+
+
+        **Limits.** 20 MB per file, 10 files per feedback item. Executable and script types are refused
+
+        (422 `file_type_not_allowed`), as is a file whose bytes do not match an image extension it
+
+        claims (422 `file_content_mismatch`). Over the size cap is 413 `file_too_large`. Files are
+
+        virus-scanned after this call returns; an infected file is removed along with its links.
+
+
+        **Reading attachments back is not part of this release** — this endpoint stores them; the
+
+        portal and the Craft app display them.
+
+
+        Takes the same three credentials as the create routes: an account API key, a widget token, or a
+
+        development key.'
+      tags:
+      - Feedback items
+      security:
+      - api_key:
+        - write:feedback:craft
+      parameters:
+      - in: path
+        name: portalId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The file itself, as multipart field `file`.
+              required:
+              - file
+      summary: Post attachment
+      x-summary-source: derived
 components:
   schemas:
-    FeedbackItem:
-      $ref: '#/components/schemas/BaseFeedbackItem'
-    Category:
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-      required:
-      - id
-      - name
-      type: object
-      additionalProperties: false
-    GeneralErrorResponse:
-      properties:
-        message:
-          type: string
-      required:
-      - message
-      type: object
-      additionalProperties: false
-    IdeaRequest:
-      properties:
-        workspaceId:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        owner:
-          type: string
-          description: 'Email address of the idea author. The backend looks up (or creates) the
-
-            person record from this email and attributes the feedback to them. This
-
-            is NOT a user ID — sending a numeric ID will return 400.'
-          example: user@example.com
-        categoryId:
-          type: string
-        labels:
-          items:
-            type: string
-          type: array
-        importanceId:
-          type: string
-          description: 'Portal importance — numeric ID OR exact name (case-insensitive). When
-
-            omitted, the portal''s `isDefault: true` importance is used (see
-
-            `GET /feedback_portal/{portalId}/importances`).'
-          example: Critical
-        customFields:
-          items:
-            $ref: '#/components/schemas/CustomFieldValue'
-          type: array
-      required:
-      - title
-      type: object
-      additionalProperties: false
-    NullableType_LinkedItem-Array_:
-      items:
-        $ref: '#/components/schemas/LinkedItem'
-      type:
-      - array
-      - 'null'
     LinkedItem:
       properties:
         id:
@@ -470,91 +1173,116 @@ components:
           description: Direct link to the linked work item in the Craft.io app.
       type: object
       additionalProperties: false
-    CustomFieldValue:
+    BulkWriteResult:
       properties:
-        id:
-          type: string
-        name:
-          type: string
-        value:
-          $ref: '#/components/schemas/NullableType_string_'
-        values:
-          $ref: '#/components/schemas/NullableType_string-Array_'
-        label:
-          type: string
-      required:
-      - id
-      type: object
-      additionalProperties: false
-    FeedbackItemsPaginated_FeedbackItem_:
-      properties:
-        items:
+        results:
           items:
-            $ref: '#/components/schemas/FeedbackItem'
+            $ref: '#/components/schemas/BulkItemResult'
           type: array
-        metadata:
-          $ref: '#/components/schemas/PaginationMetadata'
+        summary:
+          $ref: '#/components/schemas/BulkWriteSummary'
       required:
-      - items
-      - metadata
+      - results
+      - summary
       type: object
       additionalProperties: false
-    Entity:
+    ConnectFeedbackResponse:
       properties:
-        id:
+        feedbackItemId:
           type: string
-        name:
-          type:
-          - string
-          - 'null'
-      type: object
-      additionalProperties: false
-    Person:
-      properties:
-        id:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        email:
-          type: string
-      type: object
-      additionalProperties: false
-    PlainIdeaRequest:
-      properties:
-        workspaceId:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        owner:
-          type: string
-          description: 'Email address of the idea author. The backend looks up (or creates) the
-
-            person record from this email and attributes the feedback to them. This
-
-            is NOT a user ID — sending a numeric ID will return 400.'
-          example: user@example.com
-        categoryId:
-          type: string
-        labels:
+        connectedItemIds:
           items:
             type: string
           type: array
-        importanceId:
-          type: string
-          description: 'Portal importance — numeric ID OR exact name (case-insensitive). When
-
-            omitted, the portal''s `isDefault: true` importance is used (see
-
-            `GET /feedback_portal/{portalId}/importances`).'
-          example: Critical
+          description: IDs of the work items now linked to the feedback item.
       required:
-      - title
+      - feedbackItemId
+      - connectedItemIds
       type: object
       additionalProperties: false
+    BulkItemResult:
+      description: 'Per-item outcome of a bulk write. `index` is the position in the request''s
+
+        `items` array so the caller can correlate (and retry only the failures).
+
+        On success `id` carries the created/updated item id; on failure `error`
+
+        carries the message + HTTP-status code. `item`/`result` are present only when
+
+        the request asked for verbose output.'
+      properties:
+        index:
+          type: number
+          format: double
+        status:
+          type: string
+          enum:
+          - ok
+          - error
+        id:
+          type: string
+        mode:
+          type: string
+        error:
+          properties:
+            code:
+              type: number
+              format: double
+            message:
+              type: string
+          required:
+          - code
+          - message
+          type: object
+        item: {}
+        result: {}
+      required:
+      - index
+      - status
+      type: object
+      additionalProperties: false
+    RetryableErrorResponse:
+      description: 'The 503 body — NOT `GeneralErrorResponse`, which it would violate.
+
+
+        `code` and `retryAfter` are contract terms (see `ServiceUnavailableError`), and the shared error
+
+        schema is `additionalProperties: false`, so a route declaring `GeneralErrorResponse` for its 503
+
+        documents a shape this service has never sent. Same defect CRA-24377 reported against the
+
+        widget 404, one status along.
+
+
+        `code` rather than `error` because that is what the handler has always emitted here and callers
+
+        branch on it; renaming it to match the 4xx family would be the breaking change.'
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+          description: Always `retryable`. What distinguishes a transient failure from the permanent 4xx ones.
+        retryAfter:
+          type: number
+          format: double
+          description: Seconds. Mirrors the `Retry-After` header.
+      required:
+      - message
+      - code
+      - retryAfter
+      type: object
+      additionalProperties: false
+    NullableType_string_:
+      type:
+      - string
+      - 'null'
+    NullableType_string-Array_:
+      items:
+        type: string
+      type:
+      - array
+      - 'null'
     PaginationMetadata:
       properties:
         currentPage:
@@ -576,12 +1304,491 @@ components:
       - totalRecords
       type: object
       additionalProperties: false
-    NullableType_string-Array_:
-      items:
-        type: string
-      type:
-      - array
-      - 'null'
+    BulkFeedbackUpdateItem:
+      description: One feedback update in a bulk call — an UpdateFeedbackRequest plus the id.
+      properties:
+        title:
+          type: string
+          description: New title (non-empty, max 1000 characters).
+        description:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: Description. `null` clears it.
+        categoryId:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: 'Category id (from get_portal_categories). A feedback item always has a
+
+            category, so `null` resets it to the portal''s default (it does not become
+
+            uncategorized).'
+        importanceId:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: Importance — numeric id OR exact name (from get_portal_importances). `null` clears (un-prioritized).
+        statusId:
+          type: string
+          description: Portal status — numeric id OR exact name (e.g. `Released`).
+        internalStatusId:
+          type: string
+          description: Internal status — numeric id OR exact name (e.g. `Under consideration`).
+        company:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: Customer company — numeric id OR exact name (from get_portal_companies). `null` clears the association.
+        labels:
+          $ref: '#/components/schemas/NullableType_string-Array_'
+          description: Label names (replaces the item's labels). `null` or `[]` clears them.
+        customFields:
+          items:
+            $ref: '#/components/schemas/CustomFieldValue'
+          type: array
+        connectedItemIds:
+          items:
+            type: string
+          type: array
+          description: Existing work item ids to additionally connect to this feedback item.
+        feedbackItemId:
+          type: string
+          description: Feedback item to update — numeric id or `KEY-N` shortId.
+      required:
+      - feedbackItemId
+      type: object
+      additionalProperties: false
+    ItemComment:
+      properties:
+        id:
+          type: string
+        author:
+          $ref: '#/components/schemas/Entity'
+        createdAt:
+          type:
+          - string
+          - 'null'
+        body:
+          type: string
+        parentId:
+          type:
+          - string
+          - 'null'
+      type: object
+      additionalProperties: false
+    Entity:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+      type: object
+      additionalProperties: false
+    IdeaRequest:
+      properties:
+        workspaceId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+          description: 'Email address of the person who submitted the feedback.
+
+
+            Resolved against this portal, in order: an administrative user of the portal, then an
+
+            existing portal user with that address. If neither matches, a portal user IS CREATED for
+
+            the address — they hold no password and can never sign in, they simply exist so the
+
+            feedback is attributed to them and so their next submission resolves to the same person.
+
+            The new user is homed in `company` when you send one. Otherwise the company is inferred from
+
+            the address: an existing portal company whose people already use that email domain, else a new
+
+            company named for the domain. An address at a free-mail or disposable domain infers nothing —
+
+            `gmail.com` is not a customer — so those submitters go to the portal''s "Individual Submitters"
+
+            company, which is created on first use and holds everyone whose company is not determinable.
+
+
+            Omit it and the feedback is attributed to the portal''s anonymous submitter (the same as
+
+            sending `anonymous: true`).
+
+
+            This is NOT a user ID — sending anything that is not an email address returns
+
+            422 (`owner must be a valid email address`), like every other value error here.'
+          example: user@example.com
+        categoryId:
+          type: string
+        labels:
+          items:
+            type: string
+          type: array
+        widgetId:
+          type: string
+          description: 'The widget this submission came from — send it on every widget submission.
+
+
+            It names the configuration the form was rendered from, so the settings an administrator made
+
+            per widget are applied to the submission rather than having to be echoed back by the page. Today
+
+            that is the importance: a widget whose form does not ask (`hideImportance`) submits no
+
+            `importanceId`, and the widget''s own `defaultImportanceId` is applied here instead of the
+
+            portal''s default. Anything else that becomes per-widget will be applied the same way, with no
+
+            change needed in the page.
+
+
+            **A widget id this portal does not have is a 422 on an API key and is ignored on a widget
+
+            credential.** An administrator can delete a widget while a page is open, and a submission
+
+            somebody has already typed must not be lost to it — the portal''s default applies, exactly as a
+
+            submission naming no widget would get. An API key can re-read and retry, so it is told.
+
+
+            Omit it and nothing per-widget is applied; the portal''s own defaults stand. An explicit
+
+            `importanceId` always wins over the widget''s.'
+          example: '2305843010139571300'
+        importanceId:
+          type: string
+          description: 'Portal importance — numeric ID OR exact name (case-insensitive). When
+
+            omitted, the portal''s `isDefault: true` importance is used (see
+
+            `GET /feedback_portal/{portalId}/importances`) — or, when `widgetId` names a widget that hides
+
+            the importance question, that widget''s `defaultImportanceId`.'
+          example: Critical
+        company:
+          type: string
+          description: 'Customer company — numeric ID OR exact name (case-insensitive). Resolve via
+
+            `GET /feedback_portal/{portalId}/companies`.
+
+
+            Sets the feedback''s company, and is also the company a submitter created from `owner` is
+
+            placed in. A value that matches no company in this portal is a 422 listing the valid ones;
+
+            it is never created and never silently ignored.
+
+
+            Only settable on restricted portals — a public portal attributes everything to its default
+
+            company, so sending it there is a 422.'
+        anonymous:
+          type: boolean
+          description: 'Submit without attributing the feedback to a person: the item is attributed to the portal''s
+
+            anonymous submitter, so it reads as anonymous everywhere.
+
+
+            This is the explicit form of what omitting `owner` already does — send it when you want the
+
+            intent to be visible in the request rather than inferred from an absent field.
+
+
+            Mutually exclusive with `owner` — sending both returns 422. `company` is still
+
+            honoured, so anonymous feedback can still be grouped under a customer company.'
+          example: true
+        submitterId:
+          type: string
+          description: 'Your own identifier for this submitter — **the primary identity key when you send it.**
+
+
+            Prefer it over relying on `owner` alone. Matching on your id rather than on an email address
+
+            is what makes one address belonging to several of your tenants resolve to several distinct
+
+            people instead of collapsing into one, and it survives the person changing their email.
+
+
+            Send it and `owner` together: the id is how the submitter is matched, and the address is how
+
+            they are notified, so `owner` is still required.
+
+
+            **Adding it later is safe.** If you have been submitting without it, the first submission that
+
+            carries an id is matched by `owner` and the id is adopted onto that existing person — your
+
+            submitters are upgraded, not duplicated. From then on the id is what identifies them.
+
+
+            At most 255 characters; longer returns 422 rather than being truncated, because a truncated
+
+            id would silently resolve to the wrong person. Compared exactly, including case.'
+          example: user_84213
+        issuer:
+          type: string
+          description: 'Which of your systems `submitterId` came from. Only meaningful alongside `submitterId`.
+
+
+            Send it when more than one of your systems posts to the same portal: user `42` in your billing
+
+            app is not user `42` in your analytics app, and without an issuer they would resolve to one
+
+            person. With one system you can omit it — it defaults to this portal.
+
+
+            The same value the browser/widget route carries as its token `iss` claim, so a submitter
+
+            resolves to the same person whichever route their feedback arrives on.
+
+
+            At most 255 characters; longer returns 422.'
+          example: billing-app
+        submitterName:
+          type: string
+          description: 'The submitter''s name, as your own system holds it.
+
+
+            Send it and the portal shows a person. Omit it and the only name Craft can produce is the
+
+            local part of `owner`, so `jane.doe@acme.com` reads as "jane.doe" on every card and in every
+
+            digest.
+
+
+            **Refreshed on every submission that matches**, not only on the first one — the same as
+
+            `owner`. If the person is renamed in your system, the next submission carrying their
+
+            `submitterId` updates the stored name, so you never have to reconcile it separately.
+
+
+            One string, not first/last: it is split on the last space for storage and joined back for
+
+            display, so what you send is what the portal shows.
+
+
+            Requires pass-through identity on the portal, like `submitterId`, and requires `owner` — a
+
+            name with nobody to attach it to is a 422 rather than a value quietly dropped.
+
+
+            At most 256 characters; longer returns 422 rather than being truncated.'
+          example: Jane Doe
+        sourceUrl:
+          type: string
+          description: 'The page this feedback was submitted from — **including its query string.**
+
+
+            The query string is the point, not an incidental: a tenant, an account or a product area often
+
+            sits in a URL parameter, and a PM reading the feedback item needs the link that reproduces what
+
+            the submitter was looking at. Nothing is stripped, re-encoded or normalised.
+
+
+            In a single-page application send the URL **in view at submit**, not the one the page first
+
+            loaded with — they are usually different and only the first is useful.
+
+
+            Must be an absolute `http://` or `https://` URL of at most 2048 characters. Anything else
+
+            (a relative path, a `javascript:` or `data:` URL, surrounding whitespace, a NUL byte) returns
+
+            422 rather than being stored or quietly cleaned up.
+
+
+            Optional, and omitting it is the ordinary case for a backend integration that has no page.'
+          example: https://app.acme.com/reports?tenant=acme-eu&view=board
+        attachmentIds:
+          items:
+            type: string
+          type: array
+          description: 'Files to attach, as ids returned by `POST /feedback_portal/{portalId}/attachment`.
+
+
+            **Upload first, then submit.** The upload call stores the bytes against the portal and hands
+
+            back an id; naming that id here is what files it with this piece of feedback. That order is
+
+            what lets a form attach files while the submitter is still typing — there is no feedback item
+
+            to attach to until they press send — and it means a failed upload costs a retry rather than
+
+            the whole submission.
+
+
+            Each id must be one of **this** portal''s own uploads and must not already be attached to
+
+            another feedback item; anything else is a 422. At most 10 per item. Unlike `metadata`, an id
+
+            that resolves to nothing is never quietly dropped — an attachment the submitter watched upload
+
+            must not vanish behind a 200.'
+          example:
+          - '2305843010342823571'
+        customFields:
+          items:
+            $ref: '#/components/schemas/CustomFieldValue'
+          type: array
+        metadata:
+          properties: {}
+          additionalProperties:
+            anyOf:
+            - type: string
+            - type: number
+              format: double
+          type: object
+          description: 'Context your own application wants to attach — the plan, the application version, the tenant —
+
+            keyed by **custom-field id** and mapped onto this portal''s own custom fields.
+
+
+            **A key matching no field on the form is ignored, never a failure.** That is the whole contract:
+
+            your page''s template ships on your release cycle and a PM changes the portal''s fields whenever
+
+            they like, so the two WILL drift, and a stale key must never cost you a piece of feedback. The
+
+            same applies to a value the field cannot hold — dropped, not rejected. Use `customFields` when
+
+            you want an unknown id or a bad value to be a 422 instead.
+
+
+            **Keyed by id, not by display name**, precisely because a name is what gets renamed. Discover
+
+            ids via `GET /feedback_portal/{portalId}/widget/{widgetId}/config` or
+
+            `GET /feedback_portal/{portalId}/forms`.
+
+
+            **`customFields` wins.** A field named in both is taken from `customFields`, because that is
+
+            where the value the submitter could see and change arrives.
+
+
+            **Never identity.** The submitter''s name, email and company come from the signed token (or from
+
+            `owner`/`company`) and are never read from here — an unsigned value would be a second source of
+
+            something Craft already holds signed. Since keys are custom-field ids, no key can name them.
+
+
+            At most 20 keys and 4 KB in total, and unlike an unknown key this **is** a 422: sending your
+
+            whole application state is a bug you hit on the first try, not drift that appears months later.'
+          example:
+            '2305843010139571301': Enterprise
+            '2305843010139571302': 4.18.2
+      required:
+      - title
+      type: object
+      additionalProperties: false
+    Person:
+      properties:
+        id:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        email:
+          type: string
+      type: object
+      additionalProperties: false
+    BulkWriteOptions:
+      properties:
+        verbose:
+          type: boolean
+          description: 'Return the full item body for each successful row (default: compact).'
+      type: object
+      additionalProperties: false
+    FeedbackItemsPaginated_FeedbackItem_:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/FeedbackItem'
+          type: array
+        metadata:
+          $ref: '#/components/schemas/PaginationMetadata'
+      required:
+      - items
+      - metadata
+      type: object
+      additionalProperties: false
+    BulkFeedbackUpdateRequest:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/BulkFeedbackUpdateItem'
+          type: array
+        options:
+          $ref: '#/components/schemas/BulkWriteOptions'
+      required:
+      - items
+      type: object
+      additionalProperties: false
+    ValidateErrorJSON:
+      properties:
+        message:
+          type: string
+        details:
+          properties: {}
+          additionalProperties: {}
+          type: object
+      required:
+      - message
+      - details
+      type: object
+      additionalProperties: false
+    CustomFieldValue:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          $ref: '#/components/schemas/NullableType_string-or-number_'
+        values:
+          $ref: '#/components/schemas/NullableType_string-Array_'
+        label:
+          type: string
+      required:
+      - id
+      type: object
+      additionalProperties: false
+    DisconnectFeedbackResponse:
+      properties:
+        feedbackItemId:
+          type: string
+        connectedItemIds:
+          items:
+            type: string
+          type: array
+          description: IDs of the work items still linked to the feedback item after the unlink.
+        disconnected:
+          items:
+            type: string
+          type: array
+          description: IDs that were actually unlinked by this call.
+        notFound:
+          items:
+            type: string
+          type: array
+          description: 'Requested IDs that were not unlinked because they weren''t linked (or don''t
+
+            exist) — lets the caller distinguish a real disconnect from a no-op.'
+      required:
+      - feedbackItemId
+      - connectedItemIds
+      - disconnected
+      - notFound
+      type: object
+      additionalProperties: false
     BaseFeedbackItem:
       properties:
         id:
@@ -597,8 +1804,13 @@ components:
         creationTime:
           type: string
           format: date-time
+        updateTime:
+          type: string
+          format: date-time
         category:
           $ref: '#/components/schemas/Category'
+        company:
+          $ref: '#/components/schemas/Entity'
         owner:
           $ref: '#/components/schemas/Person'
         createdBy:
@@ -619,6 +1831,28 @@ components:
           type: array
         linkedItems:
           $ref: '#/components/schemas/NullableType_LinkedItem-Array_'
+        commentCount:
+          type: number
+          format: double
+        comments:
+          items:
+            $ref: '#/components/schemas/ItemComment'
+          type: array
+        internalNoteCount:
+          type: number
+          format: double
+        internalNotes:
+          items:
+            $ref: '#/components/schemas/ItemComment'
+          type: array
+        sourceUrl:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: 'The page this feedback was submitted from, as sent, query string included.
+
+
+            Null for anything submitted before the widget existed, and for any submission that carried no
+
+            page context — a backend integration has no page, and that is not the same as an unknown one.'
         webUrl:
           type: string
           description: Direct link into the feedback portal for this feedback item.
@@ -626,12 +1860,568 @@ components:
       - id
       type: object
       additionalProperties: false
-    NullableType_string_:
+    NullableType_string-or-number_:
+      anyOf:
+      - type: string
+      - type: number
+        format: double
+    FeedbackAttachment:
+      description: One stored file, as returned by POST /feedback_portal/{portalId}/attachment.
+      properties:
+        id:
+          type: string
+          description: Pass this to `attachmentIds` on the create call.
+        name:
+          type: string
+          description: The original file name, as uploaded.
+        size:
+          type: number
+          format: double
+          description: Size in bytes.
+        mime:
+          type: string
+          description: Detected MIME type — read from the bytes, not from the upload's Content-Type.
+        extension:
+          type: string
+          description: Lower-cased extension, no dot.
+      required:
+      - id
+      - name
+      - size
+      - mime
+      - extension
+      type: object
+      additionalProperties: false
+    BulkFeedbackConnectionItem:
+      description: One connection op in a bulk call. Fields used depend on `mode`.
+      properties:
+        feedbackItemId:
+          type: string
+          description: Feedback item — numeric id or `KEY-N` shortId.
+        mode:
+          type: string
+          enum:
+          - connect
+          - disconnect
+          - promote
+        itemIds:
+          items:
+            type: string
+          type: array
+          description: 'connect / disconnect: work item ids to link / unlink.'
+        parentItemId:
+          type: string
+          description: 'promote: existing work item to create the promoted item under.'
+        promotedItemType:
+          type: string
+          enum:
+          - story
+          - bug
+          - task
+          - requirement
+          description: 'promote (epic parent only): type for the created item.'
+      required:
+      - feedbackItemId
+      - mode
+      type: object
+      additionalProperties: false
+    AddFeedbackCommentRequest:
+      properties:
+        body:
+          type: string
+          description: Plain-text body (non-empty). Mentions are not supported yet.
+        internal:
+          type: boolean
+          description: true = private internal team note; false/omitted = public portal comment.
+      required:
+      - body
+      type: object
+      additionalProperties: false
+    NullableType_LinkedItem-Array_:
+      items:
+        $ref: '#/components/schemas/LinkedItem'
       type:
-      - string
+      - array
       - 'null'
+    PortalCompany:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
+    ConnectFeedbackRequest:
+      properties:
+        itemIds:
+          items:
+            type: string
+          type: array
+          description: IDs of existing work items to connect this feedback item to.
+      required:
+      - itemIds
+      type: object
+      additionalProperties: false
+    DisconnectFeedbackRequest:
+      properties:
+        itemIds:
+          items:
+            type: string
+          type: array
+          description: 'IDs of work items to unlink from this feedback item. Ids that aren''t
+
+            currently linked are silently ignored (the call is idempotent).'
+      required:
+      - itemIds
+      type: object
+      additionalProperties: false
+    PlainIdeaRequest:
+      properties:
+        workspaceId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+          description: 'Email address of the person who submitted the feedback.
+
+
+            Resolved against this portal, in order: an administrative user of the portal, then an
+
+            existing portal user with that address. If neither matches, a portal user IS CREATED for
+
+            the address — they hold no password and can never sign in, they simply exist so the
+
+            feedback is attributed to them and so their next submission resolves to the same person.
+
+            The new user is homed in `company` when you send one. Otherwise the company is inferred from
+
+            the address: an existing portal company whose people already use that email domain, else a new
+
+            company named for the domain. An address at a free-mail or disposable domain infers nothing —
+
+            `gmail.com` is not a customer — so those submitters go to the portal''s "Individual Submitters"
+
+            company, which is created on first use and holds everyone whose company is not determinable.
+
+
+            Omit it and the feedback is attributed to the portal''s anonymous submitter (the same as
+
+            sending `anonymous: true`).
+
+
+            This is NOT a user ID — sending anything that is not an email address returns
+
+            422 (`owner must be a valid email address`), like every other value error here.'
+          example: user@example.com
+        categoryId:
+          type: string
+        labels:
+          items:
+            type: string
+          type: array
+        widgetId:
+          type: string
+          description: 'The widget this submission came from — send it on every widget submission.
+
+
+            It names the configuration the form was rendered from, so the settings an administrator made
+
+            per widget are applied to the submission rather than having to be echoed back by the page. Today
+
+            that is the importance: a widget whose form does not ask (`hideImportance`) submits no
+
+            `importanceId`, and the widget''s own `defaultImportanceId` is applied here instead of the
+
+            portal''s default. Anything else that becomes per-widget will be applied the same way, with no
+
+            change needed in the page.
+
+
+            **A widget id this portal does not have is a 422 on an API key and is ignored on a widget
+
+            credential.** An administrator can delete a widget while a page is open, and a submission
+
+            somebody has already typed must not be lost to it — the portal''s default applies, exactly as a
+
+            submission naming no widget would get. An API key can re-read and retry, so it is told.
+
+
+            Omit it and nothing per-widget is applied; the portal''s own defaults stand. An explicit
+
+            `importanceId` always wins over the widget''s.'
+          example: '2305843010139571300'
+        importanceId:
+          type: string
+          description: 'Portal importance — numeric ID OR exact name (case-insensitive). When
+
+            omitted, the portal''s `isDefault: true` importance is used (see
+
+            `GET /feedback_portal/{portalId}/importances`) — or, when `widgetId` names a widget that hides
+
+            the importance question, that widget''s `defaultImportanceId`.'
+          example: Critical
+        company:
+          type: string
+          description: 'Customer company — numeric ID OR exact name (case-insensitive). Resolve via
+
+            `GET /feedback_portal/{portalId}/companies`.
+
+
+            Sets the feedback''s company, and is also the company a submitter created from `owner` is
+
+            placed in. A value that matches no company in this portal is a 422 listing the valid ones;
+
+            it is never created and never silently ignored.
+
+
+            Only settable on restricted portals — a public portal attributes everything to its default
+
+            company, so sending it there is a 422.'
+        anonymous:
+          type: boolean
+          description: 'Submit without attributing the feedback to a person: the item is attributed to the portal''s
+
+            anonymous submitter, so it reads as anonymous everywhere.
+
+
+            This is the explicit form of what omitting `owner` already does — send it when you want the
+
+            intent to be visible in the request rather than inferred from an absent field.
+
+
+            Mutually exclusive with `owner` — sending both returns 422. `company` is still
+
+            honoured, so anonymous feedback can still be grouped under a customer company.'
+          example: true
+        submitterId:
+          type: string
+          description: 'Your own identifier for this submitter — **the primary identity key when you send it.**
+
+
+            Prefer it over relying on `owner` alone. Matching on your id rather than on an email address
+
+            is what makes one address belonging to several of your tenants resolve to several distinct
+
+            people instead of collapsing into one, and it survives the person changing their email.
+
+
+            Send it and `owner` together: the id is how the submitter is matched, and the address is how
+
+            they are notified, so `owner` is still required.
+
+
+            **Adding it later is safe.** If you have been submitting without it, the first submission that
+
+            carries an id is matched by `owner` and the id is adopted onto that existing person — your
+
+            submitters are upgraded, not duplicated. From then on the id is what identifies them.
+
+
+            At most 255 characters; longer returns 422 rather than being truncated, because a truncated
+
+            id would silently resolve to the wrong person. Compared exactly, including case.'
+          example: user_84213
+        issuer:
+          type: string
+          description: 'Which of your systems `submitterId` came from. Only meaningful alongside `submitterId`.
+
+
+            Send it when more than one of your systems posts to the same portal: user `42` in your billing
+
+            app is not user `42` in your analytics app, and without an issuer they would resolve to one
+
+            person. With one system you can omit it — it defaults to this portal.
+
+
+            The same value the browser/widget route carries as its token `iss` claim, so a submitter
+
+            resolves to the same person whichever route their feedback arrives on.
+
+
+            At most 255 characters; longer returns 422.'
+          example: billing-app
+        submitterName:
+          type: string
+          description: 'The submitter''s name, as your own system holds it.
+
+
+            Send it and the portal shows a person. Omit it and the only name Craft can produce is the
+
+            local part of `owner`, so `jane.doe@acme.com` reads as "jane.doe" on every card and in every
+
+            digest.
+
+
+            **Refreshed on every submission that matches**, not only on the first one — the same as
+
+            `owner`. If the person is renamed in your system, the next submission carrying their
+
+            `submitterId` updates the stored name, so you never have to reconcile it separately.
+
+
+            One string, not first/last: it is split on the last space for storage and joined back for
+
+            display, so what you send is what the portal shows.
+
+
+            Requires pass-through identity on the portal, like `submitterId`, and requires `owner` — a
+
+            name with nobody to attach it to is a 422 rather than a value quietly dropped.
+
+
+            At most 256 characters; longer returns 422 rather than being truncated.'
+          example: Jane Doe
+        sourceUrl:
+          type: string
+          description: 'The page this feedback was submitted from — **including its query string.**
+
+
+            The query string is the point, not an incidental: a tenant, an account or a product area often
+
+            sits in a URL parameter, and a PM reading the feedback item needs the link that reproduces what
+
+            the submitter was looking at. Nothing is stripped, re-encoded or normalised.
+
+
+            In a single-page application send the URL **in view at submit**, not the one the page first
+
+            loaded with — they are usually different and only the first is useful.
+
+
+            Must be an absolute `http://` or `https://` URL of at most 2048 characters. Anything else
+
+            (a relative path, a `javascript:` or `data:` URL, surrounding whitespace, a NUL byte) returns
+
+            422 rather than being stored or quietly cleaned up.
+
+
+            Optional, and omitting it is the ordinary case for a backend integration that has no page.'
+          example: https://app.acme.com/reports?tenant=acme-eu&view=board
+        attachmentIds:
+          items:
+            type: string
+          type: array
+          description: 'Files to attach, as ids returned by `POST /feedback_portal/{portalId}/attachment`.
+
+
+            **Upload first, then submit.** The upload call stores the bytes against the portal and hands
+
+            back an id; naming that id here is what files it with this piece of feedback. That order is
+
+            what lets a form attach files while the submitter is still typing — there is no feedback item
+
+            to attach to until they press send — and it means a failed upload costs a retry rather than
+
+            the whole submission.
+
+
+            Each id must be one of **this** portal''s own uploads and must not already be attached to
+
+            another feedback item; anything else is a 422. At most 10 per item. Unlike `metadata`, an id
+
+            that resolves to nothing is never quietly dropped — an attachment the submitter watched upload
+
+            must not vanish behind a 200.'
+          example:
+          - '2305843010342823571'
+      required:
+      - title
+      type: object
+      additionalProperties: false
+    BulkWriteSummary:
+      properties:
+        total:
+          type: number
+          format: double
+        succeeded:
+          type: number
+          format: double
+        failed:
+          type: number
+          format: double
+      required:
+      - total
+      - succeeded
+      - failed
+      type: object
+      additionalProperties: false
+    BulkFeedbackConnectionRequest:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/BulkFeedbackConnectionItem'
+          type: array
+        options:
+          $ref: '#/components/schemas/BulkWriteOptions'
+      required:
+      - items
+      type: object
+      additionalProperties: false
+    FeedbackItem:
+      $ref: '#/components/schemas/BaseFeedbackItem'
+    UpdateFeedbackRequest:
+      properties:
+        title:
+          type: string
+          description: New title (non-empty, max 1000 characters).
+        description:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: Description. `null` clears it.
+        categoryId:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: 'Category id (from get_portal_categories). A feedback item always has a
+
+            category, so `null` resets it to the portal''s default (it does not become
+
+            uncategorized).'
+        importanceId:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: Importance — numeric id OR exact name (from get_portal_importances). `null` clears (un-prioritized).
+        statusId:
+          type: string
+          description: Portal status — numeric id OR exact name (e.g. `Released`).
+        internalStatusId:
+          type: string
+          description: Internal status — numeric id OR exact name (e.g. `Under consideration`).
+        company:
+          $ref: '#/components/schemas/NullableType_string_'
+          description: Customer company — numeric id OR exact name (from get_portal_companies). `null` clears the association.
+        labels:
+          $ref: '#/components/schemas/NullableType_string-Array_'
+          description: Label names (replaces the item's labels). `null` or `[]` clears them.
+        customFields:
+          items:
+            $ref: '#/components/schemas/CustomFieldValue'
+          type: array
+        connectedItemIds:
+          items:
+            type: string
+          type: array
+          description: Existing work item ids to additionally connect to this feedback item.
+      type: object
+      additionalProperties: false
+    PromoteFeedbackRequest:
+      properties:
+        parentItemId:
+          type: string
+          description: ID of the existing work item to create the promoted item under.
+        promotedItemType:
+          type: string
+          description: 'Optional type for the new item when the parent is an epic (ignored for
+
+            other parents — a theme yields an epic, a leaf item yields a sub-task).
+
+            One of: story, bug, task, requirement (case-insensitive). Defaults to `story`.
+
+            Typed as string (not a literal union) so an invalid value yields a single
+
+            clean 422 instead of tsoa''s noisy 4-way union mismatch.'
+      required:
+      - parentItemId
+      type: object
+      additionalProperties: false
+    GeneralErrorResponse:
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+          description: 'Stable machine code, present on the responses that carry one — the widget''s 401/403/404 and the
+
+            attachment 413. Optional because most errors here only have a message, but it has to be part of
+
+            the schema: tsoa emits `additionalProperties: false`, so an undeclared key makes every coded
+
+            response violate the shape its own spec tells a caller to parse.
+
+
+            OPTIONAL RATHER THAN A SEPARATE CODED-ERROR SCHEMA, and not for brevity: on the routes that
+
+            carry codes, the same status can arrive with and without one. A widget-config 404 is
+
+            `widget_unknown` when the widget id misses and a bare `Feedback portal not found` when the
+
+            portal id does; a widget-config 401 is `token_invalid` for a bad token and a bare
+
+            `Forbidden, there is no auth token` when the header is absent. A variant with `error` required
+
+            would be declared on exactly those routes and would be wrong half the time they fail.
+
+
+            Branch on it when it is there and fall back to the status when it is not. The vocabulary:
+
+            401 `token_expired` (fetch a new token and retry once) | `token_invalid` | `dev_key_invalid` |
+
+            `dev_origin_rejected`;
+
+            403 `widget_not_enabled` | `insufficient_scope` | `mcp_disabled_by_account` | `no_paid_seat`;
+
+            404 `widget_unknown` | `widget_deleted` | `widget_inactive` | `widget_no_categories`;
+
+            413 `file_too_large`.
+
+            The widget half of that list is the contract in docs/CRA-24100-widget-token-endpoint.md and is
+
+            pinned by widgetFailureTaxonomy.test.ts — change the three together.
+
+
+            Left as a free string rather than an enum on purpose — a closed set turns every new code into
+
+            a breaking change for a generated client, and new codes are the whole point of the field.'
+      required:
+      - message
+      type: object
+      additionalProperties: false
+    PromoteFeedbackResponse:
+      properties:
+        feedbackItemId:
+          type: string
+        createdItemId:
+          type: string
+          description: ID of the newly created work item linked to the feedback item.
+        shortId:
+          type: string
+          description: ShortId of the new work item (e.g. `CRK-1234`).
+        createdItemType:
+          type: string
+          description: 'Type of the new work item, derived from the parent (theme→epic, epic→story/
+
+            bug/task/requirement, leaf→sub-task). Lets the caller confirm what was made.'
+        webUrl:
+          type: string
+          description: Direct link to the new work item in the Craft.io app.
+      required:
+      - feedbackItemId
+      - createdItemId
+      type: object
+      additionalProperties: false
+    Category:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - id
+      - name
+      type: object
+      additionalProperties: false
   securitySchemes:
     api_key:
       type: apiKey
       in: header
       name: x-api-key
+    portal_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: A short-lived token signed by the customer's own server with their feedback portal's widget secret, carrying the identity of whoever is submitting. Accepted only on the two feedback-creation routes, in place of x-api-key. Used by the portal's embedded feedback widget; the customer's own integration uses x-api-key instead.
+externalDocs:
+  description: Help center
+  url: https://help.craft.io/en/
